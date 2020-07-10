@@ -7,6 +7,11 @@ const initialState = {
   name: "",
   surname: "",
   bio: "",
+  usernameErrorMessage: "",
+  passwordErrorMessage: "",
+  emailErrorMessage: "",
+  nameErrorMessage: "",
+  surnameErrorMessage: "",
 };
 
 export default class Register extends React.Component {
@@ -18,7 +23,84 @@ export default class Register extends React.Component {
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
+      usernameErrorMessage: "",
+      passwordErrorMessage: "",
+      emailErrorMessage: "",
+      nameErrorMessage: "",
+      surnameErrorMessage: "",
     });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    if (this.isValid()) {
+      this.props.handleRegister(event, this.state, () => {
+        this.setState(initialState);
+      });
+    }
+  };
+
+  isValid = () => {
+    let valid = true;
+
+    if (this.state.name.length === 0) {
+      this.setState({
+        nameErrorMessage: "Name can't be blank",
+      });
+      valid = false;
+    }
+
+    if (this.state.surname.length === 0) {
+      this.setState({
+        surnameErrorMessage: "Surname can't be blank",
+      });
+      valid = false;
+    }
+
+    if (this.state.email.length === 0) {
+      this.setState({
+        emailErrorMessage: "Email can't be blank",
+      });
+      valid = false;
+    } else if (!this.state.email.includes("@")) {
+      this.setState({
+        emailErrorMessage: "Invalid email format",
+      });
+      valid = false;
+    }
+
+    if (this.state.username.length === 0) {
+      this.setState({
+        usernameErrorMessage: "Username can't be blank",
+      });
+      valid = false;
+    } else if (this.state.username.length < 5) {
+      this.setState({
+        usernameErrorMessage: "Username must contain at least 5 characters",
+      });
+      valid = false;
+    }
+
+    let pwRegex = /(?=.*[0-9])/;
+
+    if (this.state.password.length === 0) {
+      this.setState({
+        passwordErrorMessage: "Password can't be blank",
+      });
+      valid = false;
+    } else if (this.state.password.length < 8) {
+      this.setState({
+        passwordErrorMessage: "Password must contain at least 8 characters",
+      });
+      valid = false;
+    } else if (!this.state.password.match(pwRegex)) {
+      this.setState({
+        passwordErrorMessage: "Password must contain at least one digit",
+      });
+      valid = false;
+    }
+
+    return valid;
   };
 
   render() {
@@ -35,6 +117,8 @@ export default class Register extends React.Component {
                   name="name"
                   value={this.state.name}
                 ></input>
+                <br></br>
+                <label className="error">{this.state.nameErrorMessage}</label>
               </div>
               <div>
                 <input
@@ -43,6 +127,10 @@ export default class Register extends React.Component {
                   name="surname"
                   value={this.state.surname}
                 ></input>
+                <br></br>
+                <label className="error">
+                  {this.state.surnameErrorMessage}
+                </label>
               </div>
               <div>
                 <input
@@ -52,6 +140,8 @@ export default class Register extends React.Component {
                   name="email"
                   value={this.state.email}
                 ></input>
+                <br></br>
+                <label className="error">{this.state.emailErrorMessage}</label>
               </div>
               <input
                 placeholder="username"
@@ -59,6 +149,8 @@ export default class Register extends React.Component {
                 name="username"
                 value={this.state.username}
               ></input>
+              <br></br>
+              <label className="error">{this.state.usernameErrorMessage}</label>
             </div>
             <div>
               <input
@@ -68,6 +160,8 @@ export default class Register extends React.Component {
                 name="password"
                 value={this.state.password}
               ></input>
+              <br></br>
+              <label className="error">{this.state.passwordErrorMessage}</label>
             </div>
             <div>
               <textarea
@@ -80,11 +174,7 @@ export default class Register extends React.Component {
             <button
               className="orange"
               type="submit"
-              onClick={(event) =>
-                this.props.handleRegister(event, this.state, () => {
-                  this.setState(initialState);
-                })
-              }
+              onClick={this.handleSubmit}
             >
               Register
             </button>

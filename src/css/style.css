@@ -70,3 +70,7 @@ label {
 .label {
   margin-top: 0.5em;
 }
+
+.error {
+  color: #f14e4e;
+}

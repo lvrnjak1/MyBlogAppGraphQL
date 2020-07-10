@@ -18,6 +18,16 @@ export default class Login extends React.Component {
     });
   };
 
+  handleSubmit = (event) => {
+    this.props.handleLogin(
+      event,
+      { username: this.state.username, password: this.state.passsword },
+      () => {
+        this.setState(initialState);
+      }
+    );
+  };
+
   render() {
     return (
       <div className="centerH">
@@ -30,6 +40,8 @@ export default class Login extends React.Component {
               onChange={this.handleChange}
               value={this.state.username}
             ></input>
+            <br></br>
+            <label className="error">{this.state.usernameErrorMessage}</label>
           </div>
           <div>
             <input
@@ -39,17 +51,11 @@ export default class Login extends React.Component {
               onChange={this.handleChange}
               value={this.state.password}
             ></input>
+            <br></br>
+            <label className="error">{this.state.passwordErrorMessage}</label>
           </div>
           <div>
-            <button
-              type="submit"
-              className="red"
-              onClick={(event) =>
-                this.props.handleLogin(event, this.state, () => {
-                  this.setState(initialState);
-                })
-              }
-            >
+            <button type="submit" className="red" onClick={this.handleSubmit}>
               Log in
             </button>
           </div>
