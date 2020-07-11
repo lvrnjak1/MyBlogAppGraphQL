@@ -4,12 +4,13 @@ html {
   height: 100%;
   margin: 0;
   padding: 0;
-  display: table;
+  box-sizing: border-box;
 }
-body {
+
+/* body {
   display: table-cell;
   vertical-align: middle;
-}
+} */
 
 /* .App {
   text-align: center;

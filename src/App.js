@@ -2,6 +2,8 @@ import React from "react";
 import "./App.css";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Dashboard from "./components/Dashboard";
 
 class App extends React.Component {
   constructor(props) {
@@ -37,23 +39,32 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        {this.state.isLoginActive ? (
-          <div>
-            <Login
-              handleLogin={this.handleLogin}
-              handleRegister={this.handleLoginChange}
-            ></Login>
-          </div>
-        ) : (
-          <div>
-            <Register
-              handleLogin={this.handleLoginChange}
-              handleRegister={this.handleRegister}
-            ></Register>
-          </div>
-        )}
-      </div>
+      <Router>
+        <div>
+          <Switch>
+            <Route path="/" exact component={Login}></Route>
+            <Route
+              path="/login"
+              render={(props) => (
+                <Login {...props} handleSubmit={this.handleLogin}></Login>
+              )}
+            ></Route>
+            <Route
+              path="/register"
+              render={(props) => (
+                <Register
+                  {...props}
+                  handleSubmit={this.handleRegister}
+                ></Register>
+              )}
+            ></Route>
+            <Route
+              path="/dashboard"
+              render={(props) => <Dashboard {...props} />}
+            ></Route>
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }

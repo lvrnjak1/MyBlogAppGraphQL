@@ -1,4 +1,6 @@
 import React from "react";
+import "../css/loginStyle.css";
+import { Link } from "react-router-dom";
 
 const initialState = {
   username: "",
@@ -34,7 +36,7 @@ export default class Register extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     if (this.isValid()) {
-      this.props.handleRegister(event, this.state, () => {
+      this.props.handleSubmit(event, this.state, () => {
         this.setState(initialState);
       });
     }
@@ -179,9 +181,9 @@ export default class Register extends React.Component {
               Register
             </button>
             <div>
-              <button className="red" onClick={this.props.handleLogin}>
-                Log in
-              </button>
+              <Link to="/login">
+                <button className="red">Log in</button>
+              </Link>
             </div>
           </form>
         </div>

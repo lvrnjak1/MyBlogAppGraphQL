@@ -1,0 +1,22 @@
+.post {
+  width: 99%;
+  background-color: rgba(241, 78, 78, 0.1);
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.post .date {
+  font-size: 0.75em;
+}
+
+.post .bold {
+  font-weight: bold;
+}
+
+.post .right {
+  float: right;
+}
+
+.button_container button {
+  width: 47%;
+}

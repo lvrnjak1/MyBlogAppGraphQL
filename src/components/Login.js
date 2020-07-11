@@ -1,5 +1,6 @@
 import React from "react";
-import "../css/style.css";
+import "../css/loginStyle.css";
+import { Link } from "react-router-dom";
 
 const initialState = {
   username: "",
@@ -19,9 +20,10 @@ export default class Login extends React.Component {
   };
 
   handleSubmit = (event) => {
-    this.props.handleLogin(
+    event.preventDefault();
+    this.props.handleSubmit(
       event,
-      { username: this.state.username, password: this.state.passsword },
+      { username: this.state.username, password: this.state.password },
       () => {
         this.setState(initialState);
       }
@@ -62,9 +64,9 @@ export default class Login extends React.Component {
           <div className="label">
             <label>Don't have an account? </label>
           </div>
-          <button className="orange" onClick={this.props.handleRegister}>
-            Register
-          </button>
+          <Link to="/register">
+            <button className="orange">Register</button>
+          </Link>
         </form>
       </div>
     );
