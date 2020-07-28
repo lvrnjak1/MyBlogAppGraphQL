@@ -48,3 +48,17 @@
 .preview {
   clear: both;
 }
+
+.prompt {
+  font-size: small;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.white-border {
+  border: white solid 2px;
+  margin-bottom: 0;
+  margin-top: 0;
+}

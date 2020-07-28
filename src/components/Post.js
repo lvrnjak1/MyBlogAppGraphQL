@@ -6,24 +6,17 @@ export default class Post extends React.Component {
     super(props);
 
     this.state = {
-      id: 123,
-      title: "The post title",
-      body:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doeiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim adminim veniam, quis nostrud exercitation ullamco laboris nisi utaliquip ex ea commodo consequat. Duis aute irure dolor in",
+      id: this.props.post.id,
+      title: this.props.post.title,
+      body: this.props.post.body,
       dateTime: new Date().getDate(),
       author: {
-        name: "Lamija",
-        surname: "Vrnjak",
+        name: this.props.author.name,
+        surname: this.props.author.surname,
       },
-      likes: 10,
-      like_plural: true,
-      likedBy: [
-        {
-          id: 541,
-          name: "Azemina",
-          surname: "Vrnjak",
-        },
-      ],
+      likes: this.props.post.likes.lenght,
+      like_plural: this.props.post.likes.lenght === 1 ? false : true,
+      // likedBy: this.props.post.likes,
     };
   }
 

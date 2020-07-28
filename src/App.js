@@ -4,12 +4,21 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+import * as Constants from "./constants/Constants.js";
+
+const client = new ApolloClient({
+  uri: Constants.GRAPHQL_API,
+});
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoginActive: true,
+      account: {},
+      token: "",
     };
   }
 
@@ -39,32 +48,38 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router>
-        <div>
-          <Switch>
-            <Route path="/" exact component={Login}></Route>
-            <Route
-              path="/login"
-              render={(props) => (
-                <Login {...props} handleSubmit={this.handleLogin}></Login>
-              )}
-            ></Route>
-            <Route
-              path="/register"
-              render={(props) => (
-                <Register
-                  {...props}
-                  handleSubmit={this.handleRegister}
-                ></Register>
-              )}
-            ></Route>
-            <Route
-              path="/dashboard"
-              render={(props) => <Dashboard {...props} />}
-            ></Route>
-          </Switch>
-        </div>
-      </Router>
+      <ApolloProvider client={client}>
+        <Router>
+          <div>
+            <Switch>
+              <Route
+                path="/"
+                exact
+                render={(props) => <Login {...props}></Login>}
+              ></Route>
+              <Route
+                path="/login"
+                render={(props) => <Login {...props}></Login>}
+              ></Route>
+              <Route
+                path="/register"
+                render={(props) => (
+                  <Register
+                    {...props}
+                    handleSubmit={this.handleRegister}
+                  ></Register>
+                )}
+              ></Route>
+              <Route
+                path="/dashboard"
+                render={(props) => (
+                  <Dashboard {...props} account={this.state.account} />
+                )}
+              ></Route>
+            </Switch>
+          </div>
+        </Router>
+      </ApolloProvider>
     );
   }
 }
