@@ -7,27 +7,13 @@ import Dashboard from "./components/Dashboard";
 import { concat, InMemoryCache } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import * as Constants from "./constants/Constants.js";
-//import { setContext } from "apollo-link-context";
 import { HttpLink } from "apollo-link-http";
 import { ApolloLink } from "apollo-link";
 import { ApolloClient } from "apollo-client";
 
-// const httpLink = createHttpLink({ uri: "http://localhost:8080/graphql" }); //new HttpLink({ url: `${Constants.GRAPHQL_API}` });
-
-// const authLink = setContext((_, { headers }) => {
-//   const token = localStorage.getItem("TOKEN");
-//   return {
-//     headers: {
-//       ...headers,
-//       authorization: token ? `Barer ${token}` : "",
-//     },
-//   };
-// });
-
 const httpLink = new HttpLink({ uri: Constants.GRAPHQL_API });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
-  // add the authorization to the headers
   const token = localStorage.getItem("TOKEN");
   operation.setContext({
     headers: {

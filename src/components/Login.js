@@ -7,18 +7,19 @@ import * as Constants from "../constants/Constants.js";
 const initialState = {
   username: "",
   password: "",
+  errorMessage: "",
 };
 
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = initialState;
   }
 
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
+      errorMessage: "",
     });
   };
 
@@ -29,10 +30,22 @@ export default class Login extends React.Component {
     });
   };
 
+  showError = () => {
+    this.setState({
+      username: "",
+      password: "",
+      errorMessage: "Invalid username or password",
+    });
+  };
+
   render() {
     return (
       <div className="centerH">
-        <Mutation mutation={Constants.LOGIN_MUTATION} update={this.update}>
+        <Mutation
+          mutation={Constants.LOGIN_MUTATION}
+          update={this.update}
+          onError={this.showError}
+        >
           {(signIn) => (
             <form
               onSubmit={(e) => {
@@ -45,6 +58,9 @@ export default class Login extends React.Component {
                     },
                   },
                 });
+                this.setState({
+                  errorMessage: "",
+                });
               }}
             >
               <h2>Login</h2>
@@ -56,9 +72,6 @@ export default class Login extends React.Component {
                   value={this.state.username}
                 ></input>
                 <br></br>
-                <label className="error">
-                  {this.state.usernameErrorMessage}
-                </label>
               </div>
               <div>
                 <input
@@ -69,9 +82,7 @@ export default class Login extends React.Component {
                   value={this.state.password}
                 ></input>
                 <br></br>
-                <label className="error">
-                  {this.state.passwordErrorMessage}
-                </label>
+                <label className="error">{this.state.errorMessage}</label>
               </div>
               <div>
                 <button type="submit" className="red">
