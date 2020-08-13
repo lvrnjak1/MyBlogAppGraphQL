@@ -11,11 +11,46 @@ export const LOGIN_MUTATION = gql`
         name
         surname
         bio
+        numberOfFollowers
+        numberOfFollowing
         user {
           username
           email
         }
       }
+    }
+  }
+`;
+
+export const REGISTER_MUTATION = gql`
+  mutation createAccount($account: AccountInput) {
+    createAccount(account: $account) {
+      id
+      name
+      surname
+      bio
+      numberOfFollowers
+      numberOfFollowing
+      user {
+        username
+        email
+      }
+    }
+  }
+`;
+
+export const POPULATE_FEED = gql`
+  {
+    posts: populateFeed(offsetDays: 0, numberOfDays: 2) {
+      id
+      title
+      body
+      dateTimePosted
+      author {
+        name
+        surname
+      }
+      numberOfLikes
     }
   }
 `;
@@ -50,18 +85,3 @@ export const LOGIN_MUTATION = gql`
 //     username
 //   }
 // }
-
-export const REGISTER_MUTATION = gql`
-  mutation createAccount($account: AccountInput) {
-    createAccount(account: $account) {
-      id
-      name
-      surname
-      bio
-      user {
-        username
-        email
-      }
-    }
-  }
-`;

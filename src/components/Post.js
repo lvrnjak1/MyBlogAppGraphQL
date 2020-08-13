@@ -9,16 +9,27 @@ export default class Post extends React.Component {
       id: this.props.post.id,
       title: this.props.post.title,
       body: this.props.post.body,
-      dateTime: new Date().getDate(),
+      dateTime: this.props.post.dateTimePosted,
       author: {
-        name: this.props.author.name,
-        surname: this.props.author.surname,
+        name: this.props.post.author.name,
+        surname: this.props.post.author.surname,
       },
-      likes: this.props.post.likes.lenght,
-      like_plural: this.props.post.likes.lenght === 1 ? false : true,
-      // likedBy: this.props.post.likes,
+      likes: this.props.post.numberOfLikes,
+      like_plural: this.props.post.numberOfLikes === 1 ? false : true,
     };
   }
+
+  stringFromDate = (dateTime) => {
+    let date = new Date(parseInt(dateTime));
+    let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+    let month =
+      date.getMonth() + 1 < 10 ? "0" + date.getMonth() : date.getMonth();
+    let year = date.getFullYear();
+    let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+    let minutes =
+      date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+    return day + "." + month + "." + year + " " + hours + ":" + minutes;
+  };
 
   render() {
     return (
@@ -26,7 +37,7 @@ export default class Post extends React.Component {
         <h1>{this.state.title}</h1>
         <p>{this.state.body}</p>
         <p className="date">
-          11.07.2020. 12:51 by{" "}
+          {this.stringFromDate(this.state.dateTime)} by{" "}
           {this.state.author.name + " " + this.state.author.surname}
         </p>
         <div className="button_container">

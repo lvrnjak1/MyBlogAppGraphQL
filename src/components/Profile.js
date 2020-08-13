@@ -1,7 +1,6 @@
 import React from "react";
 import "../css/profile.css";
 import Avatar from "../images/female.svg";
-import ProfilePreview from "./ProfilePreview";
 
 export default class Profile extends React.Component {
   constructor(props) {
@@ -31,20 +30,11 @@ export default class Profile extends React.Component {
           <p>{this.state.bio}</p>
         </div>
         <div className="account_list">
-          {/* <p className="prompt">Following: {this.state.following.length}</p> */}
-          {/* {this.state.following.map((user) => {
-            return <ProfilePreview key={user.id} user={user}></ProfilePreview>;
-          })} */}
           <button className="orange bold">
-            <p className="prompt">Following: {this.state.following.length}</p>
+            <p className="prompt">Following: {this.state.following}</p>
           </button>
-        </div>
-        <div className="account_list clear">
-          {/* {this.state.followers.map((user) => {
-            return <ProfilePreview key={user.id} user={user}></ProfilePreview>;
-          })} */}
           <button className="red bold">
-            <p className="prompt">Followers: {this.state.followers.length}</p>
+            <p className="prompt">Followers: {this.state.followers}</p>
           </button>
         </div>
       </div>

@@ -22,17 +22,6 @@ export default class Login extends React.Component {
     });
   };
 
-  // handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   this.props.handleSubmit(
-  //     event,
-  //     { username: this.state.username, password: this.state.password },
-  //     () => {
-  //       this.setState(initialState);
-  //     }
-  //   );
-  // };
-
   update = (cache, data) => {
     this.props.history.push("/dashboard", {
       loggedIn: true,

@@ -4,12 +4,43 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-import ApolloClient from "apollo-boost";
+import { concat, InMemoryCache } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import * as Constants from "./constants/Constants.js";
+//import { setContext } from "apollo-link-context";
+import { HttpLink } from "apollo-link-http";
+import { ApolloLink } from "apollo-link";
+import { ApolloClient } from "apollo-client";
+
+// const httpLink = createHttpLink({ uri: "http://localhost:8080/graphql" }); //new HttpLink({ url: `${Constants.GRAPHQL_API}` });
+
+// const authLink = setContext((_, { headers }) => {
+//   const token = localStorage.getItem("TOKEN");
+//   return {
+//     headers: {
+//       ...headers,
+//       authorization: token ? `Barer ${token}` : "",
+//     },
+//   };
+// });
+
+const httpLink = new HttpLink({ uri: Constants.GRAPHQL_API });
+
+const authMiddleware = new ApolloLink((operation, forward) => {
+  // add the authorization to the headers
+  const token = localStorage.getItem("TOKEN");
+  operation.setContext({
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  });
+
+  return forward(operation);
+});
 
 const client = new ApolloClient({
-  uri: Constants.GRAPHQL_API,
+  link: concat(authMiddleware, httpLink),
+  cache: new InMemoryCache(),
 });
 
 class App extends React.Component {
