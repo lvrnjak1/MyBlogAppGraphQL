@@ -1,26 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import "../css/post.css";
+import * as Constants from "../constants/Constants.js";
+import { useMutation } from "react-apollo";
 
-export default class Post extends React.Component {
-  constructor(props) {
-    super(props);
+export default function Post(props) {
+  const [likeButtonText, setLikeButtonText] = useState(
+    props.post.likedByTheCurrentUser ? "Dislike" : "Like"
+  );
+  const [id, setId] = useState(props.post.id);
+  const [title, setTitle] = useState(props.post.title);
+  const [body, setBody] = useState(props.post.body);
+  const [dateTime, setDateTime] = useState(props.post.dateTimePosted);
+  const [likes, setLikes] = useState(props.post.numberOfLikes);
+  const [like_plural, setLikePlural] = useState(
+    props.post.numberOfLikes === 1 ? false : true
+  );
+  const [author, setAuthor] = useState({
+    name: props.post.author.name,
+    surname: props.post.author.surname,
+  });
 
-    this.state = {
-      id: this.props.post.id,
-      title: this.props.post.title,
-      body: this.props.post.body,
-      dateTime: this.props.post.dateTimePosted,
-      author: {
-        name: this.props.post.author.name,
-        surname: this.props.post.author.surname,
-      },
-      likes: this.props.post.numberOfLikes,
-      like_plural: this.props.post.numberOfLikes === 1 ? false : true,
-    };
-  }
-
-  stringFromDate = (dateTime) => {
-    let date = new Date(parseInt(dateTime));
+  const stringFromDate = (d) => {
+    let date = new Date(parseInt(d));
     let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
     let month =
       date.getMonth() + 1 < 10 ? "0" + date.getMonth() : date.getMonth();
@@ -31,22 +32,33 @@ export default class Post extends React.Component {
     return day + "." + month + "." + year + " " + hours + ":" + minutes;
   };
 
-  render() {
-    return (
-      <div className="post">
-        <h1>{this.state.title}</h1>
-        <p>{this.state.body}</p>
-        <p className="date">
-          {this.stringFromDate(this.state.dateTime)} by{" "}
-          {this.state.author.name + " " + this.state.author.surname}
-        </p>
-        <div className="button_container">
-          <button className="orange bold">Like</button>
-          <button className="red right">
-            Liked by {this.state.likes} user{this.state.like_plural ? "s" : ""}
-          </button>
-        </div>
+  const [toggleLike] = useMutation(Constants.TOGGLE_LIKE, {
+    onCompleted(data) {
+      setLikes(data.post.numberOfLikes);
+      setLikeButtonText(likeButtonText === "Like" ? "Dislike" : "Like");
+    },
+  });
+
+  const handleLike = async (e) => {
+    e.preventDefault();
+    await toggleLike({ variables: { postId: id } });
+  };
+
+  return (
+    <div className="post">
+      <h1>{title}</h1>
+      <p>{body}</p>
+      <p className="date">
+        {stringFromDate(dateTime)} by {author.name + " " + author.surname}
+      </p>
+      <div className="button_container">
+        <button className="orange bold" onClick={handleLike}>
+          {likeButtonText}
+        </button>
+        <button className="red right">
+          Liked by {likes} user{like_plural ? "s" : ""}
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
 }

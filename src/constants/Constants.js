@@ -51,37 +51,23 @@ export const POPULATE_FEED = gql`
         surname
       }
       numberOfLikes
+      likedByTheCurrentUser
     }
   }
 `;
 
-// posts {
-//   id
-//   title
-//   body
-//   dateTimePosted
-//   likes {
-//     id
-//     account {
-//       id
-//       name
-//       surname
-//     }
-//   }
-// }
-// followers {
-//   id
-//   name
-//   surname
-//   user {
-//     username
-//   }
-// }
-// following {
-//   id
-//   name
-//   surname
-//   user {
-//     username
-//   }
-// }
+export const TOGGLE_LIKE = gql`
+  mutation toggleLike($postId: ID) {
+    post: toggleLike(postId: $postId) {
+      numberOfLikes
+    }
+  }
+`;
+
+export const NEW_POST = gql`
+  mutation addPost($post: PostInput) {
+    post: addPost(post: $post) {
+      id
+    }
+  }
+`;

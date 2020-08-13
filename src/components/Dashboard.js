@@ -10,7 +10,9 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: this.props.location.state.loggedIn,
+      loggedIn: this.props.location.state
+        ? this.props.location.state.loggedIn
+        : false,
       id: this.props.location.state.signInData.id,
       name: this.props.location.state.signInData.account.name,
       surname: this.props.location.state.signInData.account.surname,
@@ -27,24 +29,10 @@ export default class Dashboard extends React.Component {
     localStorage.setItem("TOKEN", this.props.location.state.signInData.token);
   }
 
-  // Posts = () => (
-  //   <Query query={Constants.POPULATE_FEED}>
-  //     {({ loading, error, data }) => {
-  //       if (loading) return "Loading...";
-  //       if (error) return `Error! ${error.message}`;
-  //       console.log(data);
-  //       // return (
-  //       //   <select name="dog" onChange={onDogSelected}>
-  //       //     {data.dogs.map(dog => (
-  //       //       <option key={dog.id} value={dog.breed}>
-  //       //         {dog.breed}
-  //       //       </option>
-  //       //     ))}
-  //       //   </select>
-  //       // );
-  //     }}
-  //   </Query>
-  // );
+  logout = () => {
+    localStorage.clear();
+    this.props.history.push("/");
+  };
 
   render() {
     return this.state.loggedIn ? (
@@ -66,6 +54,9 @@ export default class Dashboard extends React.Component {
           <div className="new-post">
             <NewPost></NewPost>
           </div>
+          <button className="red bold my-profile" onClick={this.logout}>
+            <p className="prompt">Logout</p>
+          </button>
         </div>
         <div className="posts">
           <Query query={Constants.POPULATE_FEED}>
