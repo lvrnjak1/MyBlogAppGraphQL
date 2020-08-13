@@ -15,44 +15,45 @@ export const LOGIN_MUTATION = gql`
           username
           email
         }
-        posts {
-          id
-          title
-          body
-          dateTimePosted
-          likes {
-            id
-            account {
-              id
-              name
-              surname
-            }
-          }
-        }
-        followers {
-          id
-          name
-          surname
-          user {
-            username
-          }
-        }
-        following {
-          id
-          name
-          surname
-          user {
-            username
-          }
-        }
       }
     }
   }
 `;
 
+// posts {
+//   id
+//   title
+//   body
+//   dateTimePosted
+//   likes {
+//     id
+//     account {
+//       id
+//       name
+//       surname
+//     }
+//   }
+// }
+// followers {
+//   id
+//   name
+//   surname
+//   user {
+//     username
+//   }
+// }
+// following {
+//   id
+//   name
+//   surname
+//   user {
+//     username
+//   }
+// }
+
 export const REGISTER_MUTATION = gql`
-  mutation register($AccountInput: AccountInput) {
-    createAccount(account: $AccountInput) {
+  mutation createAccount($account: AccountInput) {
+    createAccount(account: $account) {
       id
       name
       surname
@@ -60,36 +61,6 @@ export const REGISTER_MUTATION = gql`
       user {
         username
         email
-      }
-      posts {
-        id
-        title
-        body
-        dateTimePosted
-        likes {
-          id
-          account {
-            id
-            name
-            surname
-          }
-        }
-      }
-      followers {
-        id
-        name
-        surname
-        user {
-          username
-        }
-      }
-      following {
-        id
-        name
-        surname
-        user {
-          username
-        }
       }
     }
   }

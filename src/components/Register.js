@@ -1,6 +1,8 @@
 import React from "react";
 import "../css/loginStyle.css";
 import { Link } from "react-router-dom";
+import { Mutation } from "react-apollo";
+import * as Constants from "../constants/Constants.js";
 
 const initialState = {
   username: "",
@@ -31,15 +33,6 @@ export default class Register extends React.Component {
       nameErrorMessage: "",
       surnameErrorMessage: "",
     });
-  };
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-    if (this.isValid()) {
-      this.props.handleSubmit(event, this.state, () => {
-        this.setState(initialState);
-      });
-    }
   };
 
   isValid = () => {
@@ -105,87 +98,122 @@ export default class Register extends React.Component {
     return valid;
   };
 
+  update = (cache, data) => {
+    this.props.history.push("/dashboard", {
+      loggedIn: true,
+      signInData: { account: data.data.createAccount },
+    });
+  };
+
   render() {
     return (
       <div>
         <div className="centerH">
-          <form>
-            <h2 className="orangeText">Register</h2>
-            <div>
-              <div>
-                <input
-                  placeholder="name"
-                  onChange={this.handleChange}
-                  name="name"
-                  value={this.state.name}
-                ></input>
-                <br></br>
-                <label className="error">{this.state.nameErrorMessage}</label>
-              </div>
-              <div>
-                <input
-                  placeholder="surname"
-                  onChange={this.handleChange}
-                  name="surname"
-                  value={this.state.surname}
-                ></input>
-                <br></br>
-                <label className="error">
-                  {this.state.surnameErrorMessage}
-                </label>
-              </div>
-              <div>
-                <input
-                  placeholder="email"
-                  type="email"
-                  onChange={this.handleChange}
-                  name="email"
-                  value={this.state.email}
-                ></input>
-                <br></br>
-                <label className="error">{this.state.emailErrorMessage}</label>
-              </div>
-              <input
-                placeholder="username"
-                onChange={this.handleChange}
-                name="username"
-                value={this.state.username}
-              ></input>
-              <br></br>
-              <label className="error">{this.state.usernameErrorMessage}</label>
-            </div>
-            <div>
-              <input
-                placeholder="passsword"
-                type="password"
-                onChange={this.handleChange}
-                name="password"
-                value={this.state.password}
-              ></input>
-              <br></br>
-              <label className="error">{this.state.passwordErrorMessage}</label>
-            </div>
-            <div>
-              <textarea
-                placeholder="about you (optional)"
-                onChange={this.handleChange}
-                name="bio"
-                value={this.state.bio}
-              ></textarea>
-            </div>
-            <button
-              className="orange"
-              type="submit"
-              onClick={this.handleSubmit}
-            >
-              Register
-            </button>
-            <div>
-              <Link to="/login">
-                <button className="red">Log in</button>
-              </Link>
-            </div>
-          </form>
+          <Mutation mutation={Constants.REGISTER_MUTATION} update={this.update}>
+            {(register) => (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (this.isValid()) {
+                    register({
+                      variables: {
+                        account: {
+                          name: this.state.name,
+                          surname: this.state.surname,
+                          bio: this.state.bio,
+                          user: {
+                            username: this.state.username,
+                            password: this.state.password,
+                            email: this.state.email,
+                          },
+                        },
+                      },
+                    });
+                  }
+                }}
+              >
+                <h2 className="orangeText">Register</h2>
+                <div>
+                  <div>
+                    <input
+                      placeholder="name"
+                      onChange={this.handleChange}
+                      name="name"
+                      value={this.state.name}
+                    ></input>
+                    <br></br>
+                    <label className="error">
+                      {this.state.nameErrorMessage}
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      placeholder="surname"
+                      onChange={this.handleChange}
+                      name="surname"
+                      value={this.state.surname}
+                    ></input>
+                    <br></br>
+                    <label className="error">
+                      {this.state.surnameErrorMessage}
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      placeholder="email"
+                      type="email"
+                      onChange={this.handleChange}
+                      name="email"
+                      value={this.state.email}
+                    ></input>
+                    <br></br>
+                    <label className="error">
+                      {this.state.emailErrorMessage}
+                    </label>
+                  </div>
+                  <input
+                    placeholder="username"
+                    onChange={this.handleChange}
+                    name="username"
+                    value={this.state.username}
+                  ></input>
+                  <br></br>
+                  <label className="error">
+                    {this.state.usernameErrorMessage}
+                  </label>
+                </div>
+                <div>
+                  <input
+                    placeholder="passsword"
+                    type="password"
+                    onChange={this.handleChange}
+                    name="password"
+                    value={this.state.password}
+                  ></input>
+                  <br></br>
+                  <label className="error">
+                    {this.state.passwordErrorMessage}
+                  </label>
+                </div>
+                <div>
+                  <textarea
+                    placeholder="about you (optional)"
+                    onChange={this.handleChange}
+                    name="bio"
+                    value={this.state.bio}
+                  ></textarea>
+                </div>
+                <button className="orange" type="submit">
+                  Register
+                </button>
+                <div>
+                  <Link to="/login">
+                    <button className="red">Log in</button>
+                  </Link>
+                </div>
+              </form>
+            )}
+          </Mutation>
         </div>
       </div>
     );

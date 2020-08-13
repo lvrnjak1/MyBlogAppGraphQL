@@ -1,4 +1,5 @@
 import React from "react";
+import "../css/newPost.css";
 
 export default class NewPost extends React.Component {
   constructor(props) {
@@ -7,6 +8,6 @@ export default class NewPost extends React.Component {
   }
 
   render() {
-    return <div></div>;
+    return <div className="new-post"></div>;
   }
 }

@@ -16,9 +16,6 @@ export default class Dashboard extends React.Component {
       email: this.props.location.state.signInData.account.user.email,
       bio: this.props.location.state.signInData.account.bio,
       username: this.props.location.state.signInData.account.user.username,
-      posts: this.props.location.state.signInData.account.posts,
-      followers: this.props.location.state.signInData.account.followers,
-      following: this.props.location.state.signInData.account.following,
     };
   }
 
