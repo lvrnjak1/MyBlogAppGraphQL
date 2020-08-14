@@ -1,11 +1,14 @@
+import { ApolloLink } from "apollo-link";
+
 // Set user and token to local storage
 export const saveUserToken = (token) => {
   localStorage.setItem("token", token);
 };
 // Remove user and token from local storage
 export const logoutUser = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("userData");
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("userData");
+  localStorage.clear();
 };
 
 // Set user data to local storage

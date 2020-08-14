@@ -3,7 +3,7 @@ import "../css/loginStyle.css";
 import { Link } from "react-router-dom";
 import { Mutation } from "react-apollo";
 import * as Constants from "../constants/Constants.js";
-import { saveUserToken, saveUserData } from "./Utils.js";
+import { saveUserData, saveUserToken } from "./Utils.js";
 
 const initialState = {
   username: "",
@@ -25,11 +25,11 @@ export default class Login extends React.Component {
   };
 
   update = (cache, data) => {
-    saveUserToken(data.data.signIn.token);
     saveUserData(data.data.signIn.account);
+    //saveUserToken(data.data.signIn.token);
     this.props.history.push("/dashboard", {
       loggedIn: true,
-      signInData: data.data.signIn,
+      token: data.data.signIn.token,
     });
   };
 

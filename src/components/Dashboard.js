@@ -5,12 +5,13 @@ import Profile from "./Profile";
 import NewPost from "./NewPost";
 import { Query } from "react-apollo";
 import * as Constants from "../constants/Constants.js";
-import { logoutUser, getUser, getToken } from "./Utils";
+import { logoutUser, getUser, getToken, saveUserToken } from "./Utils";
 
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     const account = JSON.parse(getUser());
+    saveUserToken(this.props.location.state.token);
     this.state = {
       loggedIn: getToken() != null,
       id: account.id,
@@ -26,7 +27,7 @@ export default class Dashboard extends React.Component {
   }
 
   logout = () => {
-    logoutUser();
+    localStorage.clear();
     this.props.history.push("/");
   };
 
@@ -57,6 +58,7 @@ export default class Dashboard extends React.Component {
         <div className="posts">
           <Query query={Constants.POPULATE_FEED}>
             {({ loading, error, data }) => {
+              //console.log(localStorage.getItem("token"));
               if (loading) return "Loading...";
               if (error) return `Error! ${error.message}`;
               const { posts } = data;

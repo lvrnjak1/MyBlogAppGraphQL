@@ -10,12 +10,11 @@ import * as Constants from "./constants/Constants.js";
 import { HttpLink } from "apollo-link-http";
 import { ApolloLink } from "apollo-link";
 import { ApolloClient } from "apollo-client";
-import { getToken } from "./components/Utils";
 
 const httpLink = new HttpLink({ uri: Constants.GRAPHQL_API });
 
-const authMiddleware = new ApolloLink((operation, forward) => {
-  const token = getToken();
+let authMiddleware = new ApolloLink((operation, forward) => {
+  let token = localStorage.getItem("token");
   operation.setContext({
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
@@ -25,7 +24,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const client = new ApolloClient({
+let client = new ApolloClient({
   link: concat(authMiddleware, httpLink),
   cache: new InMemoryCache(),
 });
