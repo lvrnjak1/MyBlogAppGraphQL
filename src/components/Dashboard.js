@@ -5,32 +5,28 @@ import Profile from "./Profile";
 import NewPost from "./NewPost";
 import { Query } from "react-apollo";
 import * as Constants from "../constants/Constants.js";
+import { logoutUser, getUser, getToken } from "./Utils";
 
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+    const account = JSON.parse(getUser());
     this.state = {
-      loggedIn: this.props.location.state
-        ? this.props.location.state.loggedIn
-        : false,
-      id: this.props.location.state.signInData.id,
-      name: this.props.location.state.signInData.account.name,
-      surname: this.props.location.state.signInData.account.surname,
-      email: this.props.location.state.signInData.account.user.email,
-      bio: this.props.location.state.signInData.account.bio,
-      username: this.props.location.state.signInData.account.user.username,
-      numberOfFollowers: this.props.location.state.signInData.account
-        .numberOfFollowers,
-      numberOfFollowing: this.props.location.state.signInData.account
-        .numberOfFollowing,
-      posts: [],
+      loggedIn: getToken() != null,
+      id: account.id,
+      name: account.name,
+      surname: account.surname,
+      email: account.user.email,
+      bio: account.bio,
+      username: account.user.username,
+      numberOfFollowers: account.numberOfFollowers,
+      numberOfFollowing: account.numberOfFollowing,
+      //feedPosts: [],
     };
-
-    localStorage.setItem("TOKEN", this.props.location.state.signInData.token);
   }
 
   logout = () => {
-    localStorage.clear();
+    logoutUser();
     this.props.history.push("/");
   };
 
