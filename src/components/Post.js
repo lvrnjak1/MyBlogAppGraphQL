@@ -44,6 +44,11 @@ export default function Post(props) {
     await toggleLike({ variables: { postId: id } });
   };
 
+  const editPost = (e) => {
+    //async??
+    props.handleEdit(e, id);
+  };
+
   return (
     <div className="post">
       <h1>{title}</h1>
@@ -58,6 +63,14 @@ export default function Post(props) {
         <button className="red right">
           Liked by {likes} user{like_plural ? "s" : ""}
         </button>
+        {props.deleteOption ? (
+          <div className="utils">
+            <button onClick={(e) => editPost()}>edit</button>
+            <button onClick={(e) => props.handleDelete(e, id)}>delete</button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

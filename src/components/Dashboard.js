@@ -1,17 +1,16 @@
 import React from "react";
 import "../css/dashboard.css";
 import Post from "./Post.js";
-import Profile from "./Profile";
 import NewPost from "./NewPost";
 import { Query } from "react-apollo";
 import * as Constants from "../constants/Constants.js";
-import { logoutUser, getUser, getToken, saveUserToken } from "./Utils";
+import { getUser, getToken } from "./Utils";
+import ProfileSnippet from "./ProfileSnippet";
 
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     const account = JSON.parse(getUser());
-    saveUserToken(this.props.location.state.token);
     this.state = {
       loggedIn: getToken() != null,
       id: account.id,
@@ -31,14 +30,23 @@ export default class Dashboard extends React.Component {
     this.props.history.push("/");
   };
 
+  goToMyProfile = () => {
+    this.props.history.push("/profile/" + this.state.username, {
+      isMyProfile: true,
+    });
+  };
+
   render() {
     return this.state.loggedIn ? (
       <div>
         <div className="profile">
-          <button className="orange bold my-profile">
+          <button
+            className="orange bold my-profile"
+            onClick={this.goToMyProfile}
+          >
             <p className="prompt">Go to my profile</p>
           </button>
-          <Profile
+          <ProfileSnippet
             account={{
               name: this.state.name,
               surname: this.state.surname,
@@ -58,13 +66,16 @@ export default class Dashboard extends React.Component {
         <div className="posts">
           <Query query={Constants.POPULATE_FEED}>
             {({ loading, error, data }) => {
-              //console.log(localStorage.getItem("token"));
               if (loading) return "Loading...";
               if (error) return `Error! ${error.message}`;
               const { posts } = data;
-              return posts.map((post) => (
-                <Post key={post.id} post={post}></Post>
-              ));
+              return posts.length > 0 ? (
+                posts.map((post) => (
+                  <Post key={post.id} post={post} deleteOption={false}></Post>
+                ))
+              ) : (
+                <h1>No posts to show yet!</h1>
+              );
             }}
           </Query>
         </div>

@@ -10,6 +10,8 @@ import * as Constants from "./constants/Constants.js";
 import { HttpLink } from "apollo-link-http";
 import { ApolloLink } from "apollo-link";
 import { ApolloClient } from "apollo-client";
+import Profile from "./components/Profile";
+import "fontsource-roboto";
 
 const httpLink = new HttpLink({ uri: Constants.GRAPHQL_API });
 
@@ -92,6 +94,10 @@ class App extends React.Component {
                 render={(props) => (
                   <Dashboard {...props} account={this.state.account} />
                 )}
+              ></Route>
+              <Route
+                path="/profile/:username"
+                render={(props) => <Profile {...props} />}
               ></Route>
             </Switch>
           </div>

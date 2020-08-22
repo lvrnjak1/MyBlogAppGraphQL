@@ -71,3 +71,51 @@ export const NEW_POST = gql`
     }
   }
 `;
+
+export const GET_MY_POSTS = gql`
+  {
+    account: getAccount {
+      posts {
+        id
+        title
+        body
+        dateTimePosted
+        numberOfLikes
+        likedByTheCurrentUser
+      }
+    }
+  }
+`;
+
+export const GET_FOLLOWERS = gql`
+  {
+    account: getAccount {
+      followers {
+        id
+        name
+        surname
+      }
+    }
+  }
+`;
+
+export const GET_FOLLOWING = gql`
+  {
+    account: getAccount {
+      following {
+        id
+        name
+        surname
+      }
+    }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation deletePost($postId: ID) {
+    status: deletePost(postId: $postId) {
+      message
+      success
+    }
+  }
+`;

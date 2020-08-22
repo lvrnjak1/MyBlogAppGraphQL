@@ -1,5 +1,3 @@
-import { ApolloLink } from "apollo-link";
-
 // Set user and token to local storage
 export const saveUserToken = (token) => {
   localStorage.setItem("token", token);

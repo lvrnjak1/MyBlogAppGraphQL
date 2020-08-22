@@ -1,43 +1,101 @@
-import React from "react";
-import "../css/profile.css";
-import Avatar from "../images/female.svg";
+import React, { useState, useEffect } from "react";
+import ProfileSnippet from "./ProfileSnippet";
+import NewPost from "./NewPost";
+import Post from "./Post";
+import { getUser } from "./Utils";
+import * as Constants from "../constants/Constants";
+import { useQuery, useLazyQuery, useMutation } from "react-apollo";
 
-export default class Profile extends React.Component {
-  constructor(props) {
-    super(props);
+export default function Profile(props) {
+  const goToDashboard = () => {
+    props.history.push("/dashboard");
+  };
 
-    this.state = {
-      name: this.props.account.name,
-      surname: this.props.account.surname,
-      username: this.props.account.username,
-      bio: this.props.account.bio,
-      followers: this.props.account.followers,
-      following: this.props.account.following,
-    };
-  }
+  const logout = () => {
+    localStorage.clear();
+    props.history.push("/");
+  };
 
-  render() {
-    return (
-      <div className="profile_container">
-        <img src={Avatar} alt="avatar"></img>
-        <div className="other">
-          <h3>name: {this.state.name}</h3>
-          <h3>surname: {this.state.surname}</h3>
-          <h3>username: {this.state.username}</h3>
+  const [account, setAccount] = useState(JSON.parse(getUser()));
+  const [posts, setPosts] = useState([]);
+  const [isMyProfile, setMyProfile] = useState(
+    props.location.state.isMyProfile
+  );
+
+  // const [getMyFollowing] = useLazyQuery(Constants.GET_FOLLOWING, {
+  //   onCompleted(data) {
+  //     console.log(data);
+  //     setFollowing(data.account.following);
+  //   },
+  // });
+
+  const [deletePost] = useMutation(Constants.DELETE_POST);
+
+  const handleDeletePost = async (e, id) => {
+    e.preventDefault();
+    await deletePost({
+      variables: { postId: id },
+    }).then((res) => {
+      if (res.data.status.success) {
+        setPosts(posts.filter((post) => post.id !== id));
+      }
+      //err =>
+    });
+  };
+
+  const { data } = useQuery(Constants.GET_MY_POSTS, {
+    onCompleted(data) {
+      setPosts(data.account.posts);
+    },
+  });
+
+  return (
+    <div>
+      <div className="profile">
+        <button className="orange bold my-profile" onClick={goToDashboard}>
+          <p className="prompt">Go to dashboard</p>
+        </button>
+        <ProfileSnippet
+          account={{
+            name: account.name,
+            surname: account.surname,
+            username: account.user.username,
+            bio: account.bio,
+            following: account.numberOfFollowing,
+            followers: account.numberOfFollowers,
+          }}
+        />
+        <div className="new-post">
+          <NewPost></NewPost>
         </div>
-        <div className="clear bio">
-          <p className="prompt">About me:</p>
-          <p>{this.state.bio}</p>
-        </div>
-        <div className="account_list">
-          <button className="orange bold">
-            <p className="prompt">Following: {this.state.following}</p>
+        {isMyProfile ? (
+          <button className="red bold my-profile" onClick={logout}>
+            <p className="prompt">Logout</p>
           </button>
-          <button className="red bold">
-            <p className="prompt">Followers: {this.state.followers}</p>
-          </button>
-        </div>
+        ) : (
+          <div></div>
+        )}
       </div>
-    );
-  }
+      <div className="posts">
+        {posts.length > 0 ? (
+          posts.map((post) => {
+            post["author"] = {
+              name: account.name,
+              surname: account.surname,
+            };
+            return (
+              <Post
+                key={post.id}
+                post={post}
+                deleteOption={isMyProfile}
+                handleDelete={handleDeletePost}
+              ></Post>
+            );
+          })
+        ) : (
+          <h1>No posts to show yet!</h1>
+        )}
+      </div>
+    </div>
+  );
 }
