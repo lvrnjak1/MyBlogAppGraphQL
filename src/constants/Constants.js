@@ -24,16 +24,19 @@ export const LOGIN_MUTATION = gql`
 
 export const REGISTER_MUTATION = gql`
   mutation createAccount($account: AccountInput) {
-    createAccount(account: $account) {
-      id
-      name
-      surname
-      bio
-      numberOfFollowers
-      numberOfFollowing
-      user {
-        username
-        email
+    account: createAccount(account: $account) {
+      token
+      account {
+        id
+        name
+        surname
+        bio
+        numberOfFollowers
+        numberOfFollowing
+        user {
+          username
+          email
+        }
       }
     }
   }

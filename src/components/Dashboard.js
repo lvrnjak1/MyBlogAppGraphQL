@@ -21,7 +21,6 @@ export default class Dashboard extends React.Component {
       username: account.user.username,
       numberOfFollowers: account.numberOfFollowers,
       numberOfFollowing: account.numberOfFollowing,
-      //feedPosts: [],
     };
   }
 
