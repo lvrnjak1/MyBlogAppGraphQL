@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import CardMedia from "@material-ui/core/CardMedia";
 import Hidden from "@material-ui/core/Hidden";
 import image from "../images/female.svg";
-import { Container } from "@material-ui/core";
+import { Container, Button } from "@material-ui/core";
 
 const useStyles = makeStyles({
   card: {
@@ -37,9 +37,7 @@ export default function Post(props) {
   const [body, setBody] = useState(props.post.body);
   const [dateTime, setDateTime] = useState(props.post.dateTimePosted);
   const [likes, setLikes] = useState(props.post.numberOfLikes);
-  const [like_plural, setLikePlural] = useState(
-    props.post.numberOfLikes === 1 ? false : true
-  );
+  const [like_plural, setLikePlural] = useState(props.post.numberOfLikes !== 1);
 
   const classes = useStyles();
   const [author, setAuthor] = useState({
@@ -63,6 +61,7 @@ export default function Post(props) {
   const [toggleLike] = useMutation(Constants.TOGGLE_LIKE, {
     onCompleted(data) {
       setLikes(data.post.numberOfLikes);
+      setLikePlural(likes !== 1);
       setLikeButtonText(likeButtonText === "Like" ? "Dislike" : "Like");
     },
   });
@@ -91,6 +90,18 @@ export default function Post(props) {
             <Typography variant="subtitle1" paragraph>
               {body}
             </Typography>
+            <Button
+              variant="contained"
+              size="small"
+              classname={classes.submit}
+              color="primary"
+              onClick={handleLike}
+            >
+              {likeButtonText}
+            </Button>
+            <Button className="red right">
+              Liked by {likes} user{like_plural ? "s" : ""}
+            </Button>
           </CardContent>
         </div>
       </Card>

@@ -6,6 +6,15 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import Typography from "@material-ui/core/Typography";
 import { getUser } from "./Utils";
+import SvgIcon from "@material-ui/core/SvgIcon";
+
+function HomeIcon(props) {
+  return (
+    <SvgIcon {...props}>
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+    </SvgIcon>
+  );
+}
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -39,9 +48,14 @@ export default function Header(props) {
   };
 
   const goToMyProfile = () => {
+    if (!props.dashboard) return;
     props.history.push("/profile/" + account.user.username, {
       isMyProfile: true,
     });
+  };
+
+  const goToDashboard = () => {
+    props.history.push("/dashboard");
   };
 
   return (
@@ -60,9 +74,13 @@ export default function Header(props) {
         >
           {title}
         </Typography>
-        {/* <IconButton>
-          <SearchIcon />
-        </IconButton> */}
+        {props.dashboard ? (
+          ""
+        ) : (
+          <IconButton onClick={goToDashboard}>
+            <HomeIcon color="primary" fontSize="large" />
+          </IconButton>
+        )}
         <Button
           variant="contained"
           size="small"

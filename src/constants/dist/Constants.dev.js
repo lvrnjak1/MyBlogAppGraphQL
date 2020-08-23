@@ -48,7 +48,7 @@ function _templateObject6() {
 }
 
 function _templateObject5() {
-  var data = _taggedTemplateLiteral(["\n  mutation addPost($post: PostInput) {\n    post: addPost(post: $post) {\n      id\n    }\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  mutation addPost($post: PostInput) {\n    post: addPost(post: $post) {\n      id\n      title\n      body\n      dateTimePosted\n      numberOfLikes\n      likedByTheCurrentUser\n    }\n  }\n"]);
 
   _templateObject5 = function _templateObject5() {
     return data;
@@ -88,7 +88,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  mutation signIn($authData: AuthData) {\n    signIn(authData: $authData) {\n      token\n      account {\n        id\n        name\n        surname\n        bio\n        numberOfFollowers\n        numberOfFollowing\n        user {\n          username\n          email\n        }\n      }\n    }\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  mutation signIn($authData: AuthData) {\n    signIn(authData: $authData) {\n      token\n      account {\n        id\n        name\n        surname\n        user {\n          username\n        }\n      }\n    }\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;

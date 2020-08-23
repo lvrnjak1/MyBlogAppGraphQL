@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewPost() {
+export default function NewPost(props) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [publishedMessage, setPublishedMessage] = useState("");
@@ -65,6 +65,8 @@ export default function NewPost() {
                     dateTimePosted: new Date().getTime(),
                   },
                 },
+              }).then((res) => {
+                //props.callback(res.data.post);
               });
               setTitle("");
               setBody("");

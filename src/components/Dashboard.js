@@ -4,14 +4,7 @@ import GridListTile from "@material-ui/core/GridListTile";
 import { makeStyles } from "@material-ui/core/styles";
 import Post from "./Post.js";
 import NewPost from "./NewPost";
-import { Query } from "react-apollo";
 import * as Constants from "../constants/Constants.js";
-import { getUser, getToken } from "./Utils";
-import ProfileSnippet from "./ProfileSnippet";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import IconButton from "@material-ui/core/IconButton";
-import InfoIcon from "@material-ui/icons/Info";
 import { useQuery } from "react-apollo";
 import { useState } from "react";
 import Header from "./Header.js";
@@ -45,14 +38,13 @@ export default function Dashboard(props) {
 
   useQuery(Constants.POPULATE_FEED, {
     onCompleted(data) {
-      console.log(data.posts);
       setFeedPosts(data.posts);
     },
   });
 
   return (
     <div>
-      <Header {...props}></Header>
+      <Header {...props} dashboard={true}></Header>
       <div className="background">
         <Container maxWidth="lg" classname={classes.background}>
           <Grid container spacing={4}>

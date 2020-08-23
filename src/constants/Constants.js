@@ -10,12 +10,8 @@ export const LOGIN_MUTATION = gql`
         id
         name
         surname
-        bio
-        numberOfFollowers
-        numberOfFollowing
         user {
           username
-          email
         }
       }
     }
@@ -75,6 +71,11 @@ export const NEW_POST = gql`
   mutation addPost($post: PostInput) {
     post: addPost(post: $post) {
       id
+      title
+      body
+      dateTimePosted
+      numberOfLikes
+      likedByTheCurrentUser
     }
   }
 `;
