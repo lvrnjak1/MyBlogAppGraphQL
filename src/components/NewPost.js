@@ -66,7 +66,9 @@ export default function NewPost(props) {
                   },
                 },
               }).then((res) => {
-                //props.callback(res.data.post);
+                if (props.callback) {
+                  props.callback(res.data.post);
+                }
               });
               setTitle("");
               setBody("");

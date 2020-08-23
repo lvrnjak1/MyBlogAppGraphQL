@@ -12,6 +12,7 @@ import { Paper } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import "../css/dashboard.css";
+import Search from "./Search.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,12 +32,16 @@ const useStyles = makeStyles((theme) => ({
     padding: "1em",
   },
 }));
-
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => ++value); // update the state to force render
+}
 export default function Dashboard(props) {
   const classes = useStyles();
   const [feedPosts, setFeedPosts] = useState([]);
+  const forceUpdate = useForceUpdate();
 
-  useQuery(Constants.POPULATE_FEED, {
+  const { loading, error, data, refetch } = useQuery(Constants.POPULATE_FEED, {
     onCompleted(data) {
       setFeedPosts(data.posts);
     },
@@ -52,7 +57,12 @@ export default function Dashboard(props) {
               <NewPost></NewPost>
             </Grid>
             <Grid item xs={3}>
-              <Paper>Search</Paper>
+              <Search
+                refreshPosts={() => {
+                  refetch();
+                  forceUpdate();
+                }}
+              ></Search>
             </Grid>
             <Grid item xs={9}>
               <GridList cellHeight={200} cols={1} classname={classes.gridList}>

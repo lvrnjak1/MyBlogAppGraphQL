@@ -67,6 +67,15 @@ export const TOGGLE_LIKE = gql`
   }
 `;
 
+export const TOGGLE_FOLLOW = gql`
+  mutation toggleFollow($followeeId: ID!) {
+    account: toggleFollow(followeeId: $followeeId) {
+      id
+      isFollowedByLoggedInAccount
+    }
+  }
+`;
+
 export const NEW_POST = gql`
   mutation addPost($post: PostInput) {
     post: addPost(post: $post) {
@@ -141,6 +150,20 @@ export const GET_MY_ACCOUNT_DETAILS = gql`
         username
         email
       }
+    }
+  }
+`;
+
+export const SEARCH = gql`
+  query search($toSearch: String) {
+    results: searchAccounts(toSearch: $toSearch) {
+      id
+      name
+      surname
+      user {
+        username
+      }
+      isFollowedByLoggedInAccount
     }
   }
 `;

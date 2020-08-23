@@ -14,6 +14,12 @@ import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import { saveUserData } from "./Utils.js";
 
+//create your forceUpdate hook
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => ++value); // update the state to force render
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -36,14 +42,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Profile(props) {
   const [account, setAccount] = useState(JSON.parse(getUser()));
   const [posts, setPosts] = useState([]);
-
+  const forceUpdate = useForceUpdate();
   const classes = useStyles();
-  // const [getMyFollowing] = useLazyQuery(Constants.GET_FOLLOWING, {
-  //   onCompleted(data) {
-  //     console.log(data);
-  //     setFollowing(data.account.following);
-  //   },
-  // });
 
   const [deletePost] = useMutation(Constants.DELETE_POST);
 
@@ -76,6 +76,13 @@ export default function Profile(props) {
     },
   });
 
+  const handleNewPost = (post) => {
+    let newPosts = posts;
+    newPosts.unshift(post);
+    setPosts(newPosts);
+    forceUpdate();
+  };
+
   return (
     <div>
       <Header {...props} dashboard={false}></Header>
@@ -83,7 +90,7 @@ export default function Profile(props) {
         <Container maxWidth="lg">
           <Grid container spacing={4}>
             <Grid item xs={12} sm={8}>
-              <NewPost></NewPost>
+              <NewPost callback={handleNewPost}></NewPost>
             </Grid>
             <Grid item xs={12} sm={4}>
               <Grid container spacing={4}>

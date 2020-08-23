@@ -87,6 +87,7 @@ export default function Header(props) {
           onClick={logout}
           classname={classes.submit}
           color="primary"
+          disableElevation
         >
           Log out
         </Button>
