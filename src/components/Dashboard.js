@@ -32,14 +32,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "1em",
   },
 }));
-function useForceUpdate() {
-  const [value, setValue] = useState(0); // integer state
-  return () => setValue((value) => ++value); // update the state to force render
-}
+
 export default function Dashboard(props) {
   const classes = useStyles();
   const [feedPosts, setFeedPosts] = useState([]);
-  const forceUpdate = useForceUpdate();
 
   const { loading, error, data, refetch } = useQuery(Constants.POPULATE_FEED, {
     onCompleted(data) {
@@ -60,7 +56,6 @@ export default function Dashboard(props) {
               <Search
                 refreshPosts={() => {
                   refetch();
-                  forceUpdate();
                 }}
               ></Search>
             </Grid>
