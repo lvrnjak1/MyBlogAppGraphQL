@@ -46,7 +46,7 @@ export default function Dashboard(props) {
     <div>
       <Header {...props} dashboard={true}></Header>
       <div className="background">
-        <Container maxWidth="lg" classname={classes.background}>
+        <Container maxWidth="lg" className={classes.background}>
           <Grid container spacing={4}>
             <Grid item xs={9}>
               <NewPost></NewPost>

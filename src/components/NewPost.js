@@ -106,7 +106,7 @@ export default function NewPost(props) {
             >
               Publish
             </Button>
-            <Typography component="lable">{publishedMessage}</Typography>
+            <Typography component="label">{publishedMessage}</Typography>
           </form>
         )}
       </Mutation>

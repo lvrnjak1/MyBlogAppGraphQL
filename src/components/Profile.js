@@ -12,6 +12,7 @@ import { Paper } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
+import { saveUserData } from "./Utils.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,9 +36,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Profile(props) {
   const [account, setAccount] = useState(JSON.parse(getUser()));
   const [posts, setPosts] = useState([]);
-  const [isMyProfile, setMyProfile] = useState(
-    props.location.state.isMyProfile
-  );
 
   const classes = useStyles();
   // const [getMyFollowing] = useLazyQuery(Constants.GET_FOLLOWING, {
@@ -67,6 +65,17 @@ export default function Profile(props) {
     },
   });
 
+  useQuery(Constants.GET_MY_ACCOUNT_DETAILS, {
+    onCompleted(data) {
+      if (props.isMyProfile) {
+        saveUserData(data.account);
+        setAccount(JSON.parse(getUser()));
+      } else {
+        setAccount(data.account);
+      }
+    },
+  });
+
   return (
     <div>
       <Header {...props} dashboard={false}></Header>
@@ -79,7 +88,17 @@ export default function Profile(props) {
             <Grid item xs={12} sm={4}>
               <Grid container spacing={4}>
                 <Grid item xs={12}>
-                  <Paper>Profile</Paper>
+                  <ProfileSnippet
+                    account={{
+                      name: account.name,
+                      surname: account.surname,
+                      username: account.user.username,
+                      email: account.user.email,
+                      bio: account.bio,
+                      following: account.numberOfFollowing,
+                      followers: account.numberOfFollowers,
+                    }}
+                  ></ProfileSnippet>
                 </Grid>
                 <Grid item xs={12}>
                   <Paper>Followers</Paper>
@@ -101,7 +120,7 @@ export default function Profile(props) {
                       <GridListTile key={post.id}>
                         <Post
                           post={post}
-                          deleteOption={isMyProfile}
+                          deleteOption={props.isMyProfile}
                           handleDelete={handleDeletePost}
                         ></Post>
                       </GridListTile>

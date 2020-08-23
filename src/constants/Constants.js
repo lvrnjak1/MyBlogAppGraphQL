@@ -127,3 +127,20 @@ export const DELETE_POST = gql`
     }
   }
 `;
+
+export const GET_MY_ACCOUNT_DETAILS = gql`
+  {
+    account: getAccount {
+      id
+      name
+      surname
+      bio
+      numberOfFollowers
+      numberOfFollowing
+      user {
+        username
+        email
+      }
+    }
+  }
+`;
