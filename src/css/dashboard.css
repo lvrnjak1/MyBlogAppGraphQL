@@ -1,4 +1,4 @@
-.posts {
+/* .posts {
   margin: auto;
   width: 45%;
   margin-top: 2.5em;
@@ -17,4 +17,7 @@
 
 .my-profile {
   margin-bottom: 1em;
+} */
+.background {
+  background-color: #f4f6f3;
 }

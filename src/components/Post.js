@@ -79,7 +79,7 @@ export default function Post(props) {
 
   return (
     <Grid item xs={12}>
-      <Card className={classes.card}>
+      <Card className={classes.card} variant="outlined">
         <div className={classes.cardDetails}>
           <CardContent>
             <Typography component="h2" variant="h5">

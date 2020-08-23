@@ -51,7 +51,7 @@ export default function NewPost() {
   };
 
   return (
-    <Card className={classes.card} raised>
+    <Card className={classes.card} raised variant="outlined">
       <Mutation mutation={Constants.NEW_POST}>
         {(addPost) => (
           <form

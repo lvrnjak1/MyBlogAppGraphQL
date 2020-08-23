@@ -18,6 +18,7 @@ import Header from "./Header.js";
 import { Paper } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
+import "../css/dashboard.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     justifyContent: "space-around",
     overflow: "hidden",
-    backgroundColor: theme.palette.background.paper,
   },
   gridList: {
     width: 500,
@@ -53,25 +53,27 @@ export default function Dashboard(props) {
   return (
     <div>
       <Header {...props}></Header>
-      <Container maxWidth="lg">
-        <Grid container spacing={4}>
-          <Grid item xs={9}>
-            <NewPost></NewPost>
+      <div className="background">
+        <Container maxWidth="lg" classname={classes.background}>
+          <Grid container spacing={4}>
+            <Grid item xs={9}>
+              <NewPost></NewPost>
+            </Grid>
+            <Grid item xs={3}>
+              <Paper>Search</Paper>
+            </Grid>
+            <Grid item xs={9}>
+              <GridList cellHeight={200} cols={1} classname={classes.gridList}>
+                {feedPosts.map((post) => (
+                  <GridListTile key={post.id}>
+                    <Post post={post} deleteOption={false}></Post>
+                  </GridListTile>
+                ))}
+              </GridList>
+            </Grid>
           </Grid>
-          <Grid item xs={3}>
-            <Paper>Search</Paper>
-          </Grid>
-          <Grid item xs={9}>
-            <GridList cellHeight={200} cols={1} classname={classes.gridList}>
-              {feedPosts.map((post) => (
-                <GridListTile key={post.id}>
-                  <Post post={post} deleteOption={false}></Post>
-                </GridListTile>
-              ))}
-            </GridList>
-          </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </div>
     </div>
   );
 }

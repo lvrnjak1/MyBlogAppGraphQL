@@ -60,9 +60,9 @@ export default function Header(props) {
         >
           {title}
         </Typography>
-        <IconButton>
+        {/* <IconButton>
           <SearchIcon />
-        </IconButton>
+        </IconButton> */}
         <Button
           variant="contained"
           size="small"
