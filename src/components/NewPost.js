@@ -1,38 +1,45 @@
 import React, { useState } from "react";
-import "../css/newPost.css";
 import * as Constants from "../constants/Constants.js";
 import { Mutation } from "react-apollo";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import { Typography } from "@material-ui/core";
 
-// export default class NewPost extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {};
-//   }
-
-//   render() {
-//     return (
-//       <div className="new-post">
-//         <Mutation mutation={Constants.NEW_POST}>
-//           {(addPost) => (
-//             <form
-//               onSubmit={(e) => {
-//                 e.preventDefault();
-//                 addPost({variables: {post: }})
-//               }}
-//             ></form>
-//           )}
-//         </Mutation>
-//       </div>
-//     );
-//   }
-// }
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+  error: {
+    color: "#ff5252",
+  },
+  card: {
+    display: "center",
+    padding: "3em",
+    textAlign: "center",
+  },
+}));
 
 export default function NewPost() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [titleErroMessage, setTitleErrorMessage] = useState("");
-  const [bodyErrorMessage, setBodyErrorMessage] = useState("");
   const [publishedMessage, setPublishedMessage] = useState("");
+  const classes = useStyles();
 
   const handleChange = (e) => {
     if (e.target.name === "title") {
@@ -40,74 +47,67 @@ export default function NewPost() {
     } else {
       setBody(e.target.value);
     }
-    setTitleErrorMessage("");
-    setBodyErrorMessage("");
     setPublishedMessage("");
   };
 
-  const isValid = () => {
-    let valid = true;
-    if (!title.length) {
-      setTitleErrorMessage("Title can't be empty");
-      valid = false;
-    }
-
-    if (!body.length) {
-      setBodyErrorMessage("Body can't be empty");
-      valid = false;
-    }
-
-    return valid;
-  };
-
   return (
-    <div className="new-post">
+    <Card className={classes.card} raised>
       <Mutation mutation={Constants.NEW_POST}>
         {(addPost) => (
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              if (isValid()) {
-                addPost({
-                  variables: {
-                    post: {
-                      title: title,
-                      body: body,
-                      dateTimePosted: new Date().getTime(),
-                    },
+              addPost({
+                variables: {
+                  post: {
+                    title: title,
+                    body: body,
+                    dateTimePosted: new Date().getTime(),
                   },
-                });
-                setTitle("");
-                setBody("");
-                setPublishedMessage("Post successfully published");
-              } else {
-                setPublishedMessage("");
-              }
+                },
+              });
+              setTitle("");
+              setBody("");
+              setPublishedMessage("Post successfully published");
             }}
           >
-            <h3>New post</h3>
-            <input
-              placeholder="title"
+            <Typography component="h3">New Post</Typography>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Post title"
               name="title"
+              autoFocus
               onChange={handleChange}
               value={title}
-            ></input>
-            <br></br>
-            <label className="error">{titleErroMessage}</label>
-            <br></br>
-            <textarea
-              placeholder="body"
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              multiline
+              rows={4}
               name="body"
+              label="Post body"
               onChange={handleChange}
               value={body}
-            ></textarea>
-            <br></br>
-            <label className="error">{bodyErrorMessage}</label>
-            <button type="submit">Publish</button>
-            <label className="white">{publishedMessage}</label>
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Publish
+            </Button>
+            <Typography component="lable">{publishedMessage}</Typography>
           </form>
         )}
       </Mutation>
-    </div>
+    </Card>
   );
 }

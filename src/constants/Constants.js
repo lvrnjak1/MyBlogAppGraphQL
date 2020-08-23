@@ -44,14 +44,18 @@ export const REGISTER_MUTATION = gql`
 
 export const POPULATE_FEED = gql`
   {
-    posts: populateFeed(offsetDays: 0, numberOfDays: 2) {
+    posts: populateFeed(offsetDays: 0, numberOfDays: 100) {
       id
       title
       body
       dateTimePosted
       author {
+        id
         name
         surname
+        user {
+          username
+        }
       }
       numberOfLikes
       likedByTheCurrentUser

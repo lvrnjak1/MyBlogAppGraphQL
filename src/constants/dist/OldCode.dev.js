@@ -3,14 +3,12 @@
 //   password: "",
 //   errorMessage: "",
 // };
-
 // export default class Login extends React.Component {
 //   constructor(props) {
 //     super(props);
 //     this.state = initialState;
 //     localStorage.clear();
 //   }
-
 //   render() {
 //     return (
 //       <div className="centerH">
@@ -75,7 +73,6 @@
 //     );
 //   }
 // }
-
 // const initialState = {
 //   username: "",
 //   password: "",
@@ -89,13 +86,11 @@
 //   nameErrorMessage: "",
 //   surnameErrorMessage: "",
 // };
-
 // export default class Register extends React.Component {
 //   constructor(props) {
 //     super(props);
 //     this.state = initialState;
 //   }
-
 //   render() {
 //     return (
 //       <div>
@@ -210,18 +205,16 @@
 //     );
 //   }
 // }
-
 // const isValid = () => {
 //   let valid = true;
 //   if (!title.length) {
 //     setTitleErrorMessage("Title can't be empty");
 //     valid = false;
 //   }
-
 //   if (!body.length) {
 //     setBodyErrorMessage("Body can't be empty");
 //     valid = false;
 //   }
-
 //   return valid;
 // };
+"use strict";

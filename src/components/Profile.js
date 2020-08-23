@@ -4,7 +4,7 @@ import NewPost from "./NewPost";
 import Post from "./Post";
 import { getUser } from "./Utils";
 import * as Constants from "../constants/Constants";
-import { useQuery, useLazyQuery, useMutation } from "react-apollo";
+import { useQuery, useMutation } from "react-apollo";
 
 export default function Profile(props) {
   const goToDashboard = () => {
