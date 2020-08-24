@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
 import Typography from "@material-ui/core/Typography";
 import { getUser } from "./Utils";
 import SvgIcon from "@material-ui/core/SvgIcon";
@@ -39,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header(props) {
   const classes = useStyles();
-  const title = "BLOG";
   const account = JSON.parse(getUser());
 
   const logout = () => {
@@ -73,7 +71,7 @@ export default function Header(props) {
           noWrap
           className={classes.toolbarTitle}
         >
-          {title}
+          {props.dashboard ? "BLOG: DASHBOARD" : "BLOG"}
         </Typography>
         {props.dashboard ? (
           ""

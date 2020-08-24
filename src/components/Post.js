@@ -8,6 +8,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
+import "../css/style.css";
 
 const useStyles = makeStyles({
   card: {
@@ -88,6 +89,7 @@ export default function Post(props) {
                   pathname: `/profile/${author.username}`,
                   state: { isMyProfile: false, id: author.id },
                 }}
+                className="link"
               >
                 {author.name + " " + author.surname}
               </Link>

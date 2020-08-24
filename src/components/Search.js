@@ -11,6 +11,8 @@ import { withApollo, useMutation } from "react-apollo";
 import Grid from "@material-ui/core/Grid";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+import { Link } from "react-router-dom";
+import "../css/style.css";
 
 const useStyles = makeStyles({
   card: {
@@ -41,7 +43,6 @@ function Search(props) {
 
   const [toggleFollow] = useMutation(Constants.TOGGLE_FOLLOW, {
     onCompleted(data) {
-      console.log(data); //isFollowedByLoggedInAccount
       let index = searchResults.findIndex(
         (account) => account.id === data.account.id
       );
@@ -76,7 +77,6 @@ function Search(props) {
               autoFocus
               onChange={(e) => {
                 setQuery(e.target.value);
-                console.log(e.target.value);
                 if (e.target.value != "") {
                   searchAccounts(e);
                 } else {
@@ -97,12 +97,20 @@ function Search(props) {
                       <AddCircleOutlineOutlinedIcon color="primary"></AddCircleOutlineOutlinedIcon>
                     )}
                   </IconButton>
-                  <Typography component="label">
-                    {account.name} {account.surname}{" "}
-                  </Typography>
-                  <Typography component="label" color="textSecondary">
-                    {account.user.username}
-                  </Typography>
+                  <Link
+                    to={{
+                      pathname: `/profile/${account.user.username}`,
+                      state: { isMyProfile: false, id: account.id },
+                    }}
+                    className="link"
+                  >
+                    <Typography component="label">
+                      {account.name} {account.surname}{" "}
+                    </Typography>
+                    <Typography component="label" color="textSecondary">
+                      {account.user.username}
+                    </Typography>
+                  </Link>
                 </GridListTile>
               ))}
             </GridList>
