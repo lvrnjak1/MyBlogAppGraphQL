@@ -8,7 +8,6 @@ import * as Constants from "../constants/Constants.js";
 import { useQuery } from "react-apollo";
 import { useState } from "react";
 import Header from "./Header.js";
-import { Paper } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import "../css/dashboard.css";
@@ -60,7 +59,7 @@ export default function Dashboard(props) {
               ></Search>
             </Grid>
             <Grid item xs={9}>
-              <GridList cellHeight={200} cols={1} classname={classes.gridList}>
+              <GridList cellhight="auto" cols={1} classname={classes.gridList}>
                 {feedPosts.map((post) => (
                   <GridListTile key={post.id}>
                     <Post post={post} deleteOption={false}></Post>
@@ -74,6 +73,7 @@ export default function Dashboard(props) {
     </div>
   );
 }
+//cellHeight={200}
 
 // export default class Dashboard extends React.Component {
 //   constructor(props) {

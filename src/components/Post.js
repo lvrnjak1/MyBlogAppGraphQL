@@ -7,8 +7,11 @@ import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
 import "../css/style.css";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles({
   card: {
@@ -29,15 +32,19 @@ export default function Post(props) {
   const [likeButtonText, setLikeButtonText] = useState(
     props.post.likedByTheCurrentUser ? "Dislike" : "Like"
   );
-  const [id, setId] = useState(props.post.id);
+  const [id] = useState(props.post.id);
   const [title, setTitle] = useState(props.post.title);
   const [body, setBody] = useState(props.post.body);
-  const [dateTime, setDateTime] = useState(props.post.dateTimePosted);
+  const [dateTime] = useState(props.post.dateTimePosted);
   const [likes, setLikes] = useState(props.post.numberOfLikes);
   const [like_plural, setLikePlural] = useState(props.post.numberOfLikes !== 1);
+  const [edited, setEdited] = useState(props.post.edited);
+  const [editing, setEditing] = useState(false);
+  const [titleEdited, setTItleEdited] = useState(title);
+  const [bodyEdited, setBodyEdited] = useState(body);
 
   const classes = useStyles();
-  const [author, setAuthor] = useState({
+  const [author] = useState({
     id: props.post.author.id,
     name: props.post.author.name,
     surname: props.post.author.surname,
@@ -69,9 +76,15 @@ export default function Post(props) {
     await toggleLike({ variables: { postId: id } });
   };
 
-  const editPost = (e) => {
-    //async??
-    props.handleEdit(e, id);
+  const handleEdit = (e) => {
+    setEditing(!editing);
+    props.handleEdit(e, id, titleEdited, bodyEdited, update);
+  };
+
+  const update = (newTitle, newBody, newEdited) => {
+    setTitle(newTitle);
+    setBody(newBody);
+    setEdited(newEdited);
   };
 
   return (
@@ -79,9 +92,50 @@ export default function Post(props) {
       <Card className={classes.card} variant="outlined">
         <div className={classes.cardDetails}>
           <CardContent>
-            <Typography component="h2" variant="h5">
-              {title}
-            </Typography>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {!editing ? (
+                <Typography component="h2" variant="h5">
+                  {title}
+                </Typography>
+              ) : (
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  label="title"
+                  name="title"
+                  autoFocus
+                  value={titleEdited}
+                  onChange={(e) => {
+                    setTItleEdited(e.target.value);
+                  }}
+                />
+              )}
+
+              {props.deleteOption ? (
+                <div>
+                  <IconButton
+                    onClick={(e) => props.handleDelete(e, id)}
+                    style={{ float: "right" }}
+                  >
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => setEditing(!editing)}
+                    style={{ float: "right" }}
+                  >
+                    <EditOutlinedIcon />
+                  </IconButton>{" "}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
             <Typography variant="subtitle1" color="textSecondary">
               {stringFromDate(dateTime)} by{" "}
               <Link
@@ -93,48 +147,58 @@ export default function Post(props) {
               >
                 {author.name + " " + author.surname}
               </Link>
+              {edited ? "(edited)" : ""}
             </Typography>
-            <Typography variant="subtitle1" paragraph>
-              {body}
-            </Typography>
-            <Button
-              variant="contained"
-              size="small"
-              className={classes.submit}
-              color="primary"
-              onClick={handleLike}
-            >
-              {likeButtonText}
-            </Button>
-            <Button className="red right">
-              Liked by {likes} user{like_plural ? "s" : ""}
-            </Button>
+            {!editing ? (
+              <Typography variant="subtitle1" paragraph>
+                {body}
+              </Typography>
+            ) : (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label="body"
+                name="body"
+                autoFocus
+                value={bodyEdited}
+                onChange={(e) => {
+                  setBodyEdited(e.target.value);
+                }}
+              />
+            )}
+
+            {!editing ? (
+              <div>
+                <Button
+                  variant="contained"
+                  size="small"
+                  className={classes.submit}
+                  color="primary"
+                  onClick={handleLike}
+                >
+                  {likeButtonText}
+                </Button>
+                <Button>
+                  Liked by {likes} user{like_plural ? "s" : ""}
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <Button
+                  variant="contained"
+                  size="small"
+                  className={classes.submit}
+                  color="primary"
+                  onClick={handleEdit}
+                >
+                  Done
+                </Button>
+              </div>
+            )}
           </CardContent>
         </div>
       </Card>
     </Grid>
-    // <div className="post">
-    //   <h1>{title}</h1>
-    //   <p>{body}</p>
-    //   <p className="date">
-    //     {stringFromDate(dateTime)} by {author.name + " " + author.surname}
-    //   </p>
-    //   <div className="button_container">
-    //     <button className="orange bold" onClick={handleLike}>
-    //       {likeButtonText}
-    //     </button>
-    //     <button className="red right">
-    //       Liked by {likes} user{like_plural ? "s" : ""}
-    //     </button>
-    //     {props.deleteOption ? (
-    //       <div className="utils">
-    //         <button onClick={(e) => editPost()}>edit</button>
-    //         <button onClick={(e) => props.handleDelete(e, id)}>delete</button>
-    //       </div>
-    //     ) : (
-    //       ""
-    //     )}
-    //   </div>
-    // </div>
   );
 }

@@ -309,3 +309,26 @@
 //     </button>
 //   </div>
 // </div>
+// <div className="post">
+//   <h1>{title}</h1>
+//   <p>{body}</p>
+//   <p className="date">
+//     {stringFromDate(dateTime)} by {author.name + " " + author.surname}
+//   </p>
+//   <div className="button_container">
+//     <button className="orange bold" onClick={handleLike}>
+//       {likeButtonText}
+//     </button>
+//     <button className="red right">
+//       Liked by {likes} user{like_plural ? "s" : ""}
+//     </button>
+//     {props.deleteOption ? (
+//       <div className="utils">
+//         <button onClick={(e) => editPost()}>edit</button>
+//         <button onClick={(e) => props.handleDelete(e, id)}>delete</button>
+//       </div>
+//     ) : (
+//       ""
+//     )}
+//   </div>
+// </div>

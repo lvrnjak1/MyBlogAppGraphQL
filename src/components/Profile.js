@@ -11,7 +11,6 @@ import { Paper } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
-import { saveUserData } from "./Utils.js";
 
 //create your forceUpdate hook
 function useForceUpdate() {
@@ -42,6 +41,7 @@ export default function Profile(props) {
   const forceUpdate = useForceUpdate();
   const classes = useStyles();
   const [deletePost] = useMutation(Constants.DELETE_POST);
+  const [editPost] = useMutation(Constants.EDIT_POST);
 
   const handleDeletePost = async (e, id) => {
     e.preventDefault();
@@ -58,6 +58,31 @@ export default function Profile(props) {
     });
   };
 
+  const handleEditPost = async (e, postId, newTitle, newBody, callback) => {
+    e.preventDefault();
+    await editPost({
+      variables: {
+        postId,
+        newTitle,
+        newBody,
+      },
+    })
+      .then((res) => {
+        let newPosts = account.posts.slice();
+        let index = newPosts.findIndex((post) => post.id === res.data.post.id);
+        newPosts[index].title = res.data.post.title;
+        newPosts[index].body = res.data.post.body;
+        newPosts[index].edited = res.data.post.edited;
+        setAccount({
+          ...account,
+          posts: newPosts,
+        });
+      })
+      .then(() => {
+        callback(newTitle, newBody, true);
+      });
+  };
+
   const handleNewPost = (post) => {
     let newPosts = account.posts;
     newPosts.unshift(post);
@@ -65,7 +90,7 @@ export default function Profile(props) {
     forceUpdate();
   };
 
-  const { loading, error, data } = useQuery(Constants.GET_ACCOUNT_BY_ID, {
+  const { loading, error } = useQuery(Constants.GET_ACCOUNT_BY_ID, {
     variables: {
       accountId: props.location.state.id,
     },
@@ -120,7 +145,7 @@ export default function Profile(props) {
                 </Grid>
                 <Grid item xs={8}>
                   <GridList
-                    cellHeight={200}
+                    cellHeight="auto"
                     cols={1}
                     className={classes.gridList}
                   >
@@ -137,8 +162,9 @@ export default function Profile(props) {
                           <GridListTile key={post.id}>
                             <Post
                               post={post}
-                              deleteOption={props.isMyProfile}
+                              deleteOption={props.location.state.isMyProfile}
                               handleDelete={handleDeletePost}
+                              handleEdit={handleEditPost}
                             ></Post>
                           </GridListTile>
                         );

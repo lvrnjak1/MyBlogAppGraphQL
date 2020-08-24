@@ -45,6 +45,7 @@ export const POPULATE_FEED = gql`
       title
       body
       dateTimePosted
+      edited
       author {
         id
         name
@@ -85,6 +86,7 @@ export const NEW_POST = gql`
       dateTimePosted
       numberOfLikes
       likedByTheCurrentUser
+      edited
     }
   }
 `;
@@ -99,6 +101,7 @@ export const GET_MY_POSTS = gql`
         dateTimePosted
         numberOfLikes
         likedByTheCurrentUser
+        edited
       }
     }
   }
@@ -133,6 +136,17 @@ export const DELETE_POST = gql`
     status: deletePost(postId: $postId) {
       message
       success
+    }
+  }
+`;
+
+export const EDIT_POST = gql`
+  mutation editPost($postId: ID, $newTitle: String, $newBody: String) {
+    post: editPost(postId: $postId, newTitle: $newTitle, newBody: $newBody) {
+      id
+      title
+      body
+      edited
     }
   }
 `;
@@ -189,6 +203,7 @@ export const GET_ACCOUNT_BY_ID = gql`
         dateTimePosted
         numberOfLikes
         likedByTheCurrentUser
+        edited
       }
     }
   }
