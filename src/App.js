@@ -41,30 +41,6 @@ class App extends React.Component {
     };
   }
 
-  handleLoginChange = (event) => {
-    event.preventDefault();
-    this.setState({
-      isLoginActive: !this.state.isLoginActive,
-    });
-  };
-
-  handleLogin = (event, state, callback) => {
-    event.preventDefault();
-    console.log(state.username + " " + state.password);
-    callback();
-  };
-
-  handleRegister = (event, state, callback) => {
-    event.preventDefault();
-    console.log(state.username);
-    console.log(state.password);
-    console.log(state.name);
-    console.log(state.surname);
-    console.log(state.email);
-    console.log(state.bio);
-    callback();
-  };
-
   render() {
     return (
       <ApolloProvider client={client}>
@@ -82,12 +58,7 @@ class App extends React.Component {
               ></Route>
               <Route
                 path="/register"
-                render={(props) => (
-                  <Register
-                    {...props}
-                    handleSubmit={this.handleRegister}
-                  ></Register>
-                )}
+                render={(props) => <Register></Register>}
               ></Route>
               <Route
                 path="/dashboard"

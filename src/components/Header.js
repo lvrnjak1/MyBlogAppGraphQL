@@ -48,9 +48,10 @@ export default function Header(props) {
   };
 
   const goToMyProfile = () => {
-    if (!props.dashboard) return;
+    //if (!props.dashboard) return;
     props.history.push("/profile/" + account.user.username, {
       isMyProfile: true,
+      id: account.id,
     });
   };
 
@@ -85,7 +86,7 @@ export default function Header(props) {
           variant="contained"
           size="small"
           onClick={logout}
-          classname={classes.submit}
+          className={classes.submit}
           color="primary"
           disableElevation
         >

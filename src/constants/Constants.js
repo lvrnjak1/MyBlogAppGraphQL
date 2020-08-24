@@ -167,3 +167,46 @@ export const SEARCH = gql`
     }
   }
 `;
+
+export const GET_ACCOUNT_BY_ID = gql`
+  query getAccountById($accountId: ID!) {
+    account: getAccountById(accountId: $accountId) {
+      id
+      name
+      surname
+      bio
+      numberOfFollowers
+      numberOfFollowing
+      isFollowedByLoggedInAccount
+      user {
+        username
+        email
+      }
+      posts {
+        id
+        title
+        body
+        dateTimePosted
+        numberOfLikes
+        likedByTheCurrentUser
+      }
+    }
+  }
+`;
+
+// followers {
+//   id
+//   name
+//   surname
+//   user{
+//     username
+//   }
+// }
+// following {
+//   id
+//   name
+//   surname
+//   user{
+//     username
+//   }
+// }

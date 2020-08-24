@@ -5,13 +5,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import { Link } from "react-router-dom";
-import CardMedia from "@material-ui/core/CardMedia";
-import Hidden from "@material-ui/core/Hidden";
-import image from "../images/female.svg";
-import { Container, Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles({
   card: {
@@ -41,9 +37,10 @@ export default function Post(props) {
 
   const classes = useStyles();
   const [author, setAuthor] = useState({
+    id: props.post.author.id,
     name: props.post.author.name,
     surname: props.post.author.surname,
-    username: props.post.author.username,
+    username: props.post.author.user.username,
   });
 
   const stringFromDate = (d) => {
@@ -85,7 +82,15 @@ export default function Post(props) {
               {title}
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-              {stringFromDate(dateTime)} by {author.name + " " + author.surname}
+              {stringFromDate(dateTime)} by{" "}
+              <Link
+                to={{
+                  pathname: `/profile/${author.username}`,
+                  state: { isMyProfile: false, id: author.id },
+                }}
+              >
+                {author.name + " " + author.surname}
+              </Link>
             </Typography>
             <Typography variant="subtitle1" paragraph>
               {body}
@@ -93,7 +98,7 @@ export default function Post(props) {
             <Button
               variant="contained"
               size="small"
-              classname={classes.submit}
+              className={classes.submit}
               color="primary"
               onClick={handleLike}
             >

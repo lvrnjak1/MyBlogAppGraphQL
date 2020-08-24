@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ProfileSnippet from "./ProfileSnippet";
 import NewPost from "./NewPost";
 import Post from "./Post";
-import { getUser } from "./Utils";
 import * as Constants from "../constants/Constants";
 import { useQuery, useMutation } from "react-apollo";
 import Header from "./Header.js";
@@ -28,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
   },
   gridList: {
-    width: 500,
     height: 450,
   },
   icon: {
@@ -40,11 +38,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Profile(props) {
-  const [account, setAccount] = useState(JSON.parse(getUser()));
-  const [posts, setPosts] = useState([]);
+  const [account, setAccount] = useState({}); //useState(JSON.parse(getUser()));
   const forceUpdate = useForceUpdate();
   const classes = useStyles();
-
   const [deletePost] = useMutation(Constants.DELETE_POST);
 
   const handleDeletePost = async (e, id) => {
@@ -53,141 +49,106 @@ export default function Profile(props) {
       variables: { postId: id },
     }).then((res) => {
       if (res.data.status.success) {
-        setPosts(posts.filter((post) => post.id !== id));
+        setAccount({
+          ...account,
+          posts: account.posts.filter((post) => post.id !== id),
+        });
       }
       //err =>
     });
   };
 
-  const { data } = useQuery(Constants.GET_MY_POSTS, {
-    onCompleted(data) {
-      setPosts(data.account.posts);
-    },
-  });
-
-  useQuery(Constants.GET_MY_ACCOUNT_DETAILS, {
-    onCompleted(data) {
-      if (props.isMyProfile) {
-        saveUserData(data.account);
-        setAccount(JSON.parse(getUser()));
-      } else {
-        setAccount(data.account);
-      }
-    },
-  });
-
   const handleNewPost = (post) => {
-    let newPosts = posts;
+    let newPosts = account.posts;
     newPosts.unshift(post);
-    setPosts(newPosts);
+    setAccount({ ...account, posts: newPosts });
     forceUpdate();
   };
 
+  const { loading, error, data } = useQuery(Constants.GET_ACCOUNT_BY_ID, {
+    variables: {
+      accountId: props.location.state.id,
+    },
+    onCompleted(data) {
+      setAccount(data.account);
+    },
+  });
+
   return (
     <div>
-      <Header {...props} dashboard={false}></Header>
-      <div className="background">
-        <Container maxWidth="lg">
-          <Grid container spacing={4}>
-            <Grid item xs={12} sm={8}>
-              <NewPost callback={handleNewPost}></NewPost>
-            </Grid>
-            <Grid item xs={12} sm={4}>
+      {!account.user || loading || error ? (
+        ""
+      ) : (
+        <div>
+          <Header
+            {...props}
+            dashboard={false}
+            isMyProfile={props.isMyProfile} //based on this we will have the follow unfollow button
+          ></Header>
+          <div className="background">
+            <Container maxWidth="lg">
               <Grid container spacing={4}>
-                <Grid item xs={12}>
-                  <ProfileSnippet
-                    account={{
-                      name: account.name,
-                      surname: account.surname,
-                      username: account.user.username,
-                      email: account.user.email,
-                      bio: account.bio,
-                      following: account.numberOfFollowing,
-                      followers: account.numberOfFollowers,
-                    }}
-                  ></ProfileSnippet>
+                <Grid item xs={12} sm={8}>
+                  <NewPost callback={handleNewPost}></NewPost>
                 </Grid>
-                <Grid item xs={12}>
-                  <Paper>Followers</Paper>
+                <Grid item xs={12} sm={4}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                      <ProfileSnippet
+                        account={{
+                          name: account.name,
+                          surname: account.surname,
+                          username: account.user.username,
+                          email: account.user.email,
+                          bio: account.bio,
+                          following: account.numberOfFollowing,
+                          followers: account.numberOfFollowers,
+                        }}
+                      ></ProfileSnippet>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Paper>Followers</Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Paper>Following</Paper>
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Paper>Following</Paper>
+                <Grid item xs={8}>
+                  <GridList
+                    cellHeight={200}
+                    cols={1}
+                    className={classes.gridList}
+                  >
+                    {account.posts.length > 0 ? (
+                      account.posts.map((post) => {
+                        post["author"] = {
+                          name: account.name,
+                          surname: account.surname,
+                          user: {
+                            username: account.user.username,
+                          },
+                        };
+                        return (
+                          <GridListTile key={post.id}>
+                            <Post
+                              post={post}
+                              deleteOption={props.isMyProfile}
+                              handleDelete={handleDeletePost}
+                            ></Post>
+                          </GridListTile>
+                        );
+                      })
+                    ) : (
+                      <h1>No posts to show yet!</h1>
+                    )}
+                  </GridList>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={8}>
-              <GridList cellHeight={200} cols={1} classname={classes.gridList}>
-                {posts.length > 0 ? (
-                  posts.map((post) => {
-                    post["author"] = {
-                      name: account.name,
-                      surname: account.surname,
-                    };
-                    return (
-                      <GridListTile key={post.id}>
-                        <Post
-                          post={post}
-                          deleteOption={props.isMyProfile}
-                          handleDelete={handleDeletePost}
-                        ></Post>
-                      </GridListTile>
-                    );
-                  })
-                ) : (
-                  <h1>No posts to show yet!</h1>
-                )}
-              </GridList>
-            </Grid>
-          </Grid>
-        </Container>
-      </div>
+            </Container>
+          </div>
+        </div>
+      )}
     </div>
-    // <div>
-    //   <div className="profile">
-    //     <button className="orange bold my-profile" onClick={goToDashboard}>
-    //       <p className="prompt">Go to dashboard</p>
-    //     </button>
-    //     <ProfileSnippet
-    //       account={{
-    //         name: account.name,
-    //         surname: account.surname,
-    //         username: account.user.username,
-    //         bio: account.bio,
-    //         following: account.numberOfFollowing,
-    //         followers: account.numberOfFollowers,
-    //       }}
-    //     />
-    //     <div className="new-post">
-    //       <NewPost></NewPost>
-    //     </div>
-    //     {isMyProfile ? (
-    //       <button className="red bold my-profile" onClick={logout}>
-    //         <p className="prompt">Logout</p>
-    //       </button>
-    //     ) : (
-    //       <div></div>
-    //     )}
-    //   </div>
-    //   <div className="posts">
-    //     {posts.length > 0 ? (
-    //       posts.map((post) => {
-    //         post["author"] = {
-    //           name: account.name,
-    //           surname: account.surname,
-    //         };
-    //         return (
-    //           <Post
-    //             key={post.id}
-    //             post={post}
-    //             deleteOption={isMyProfile}
-    //             handleDelete={handleDeletePost}
-    //           ></Post>
-    //         );
-    //       })
-    //     ) : (
-    //       <h1>No posts to show yet!</h1>
-    //     )}
-    //   </div>
-    // </div>
   );
 }

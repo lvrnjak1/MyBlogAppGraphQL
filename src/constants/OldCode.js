@@ -225,3 +225,87 @@
 
 //   return valid;
 // };
+
+// <div>
+//   <div className="profile">
+//     <button className="orange bold my-profile" onClick={goToDashboard}>
+//       <p className="prompt">Go to dashboard</p>
+//     </button>
+//     <ProfileSnippet
+//       account={{
+//         name: account.name,
+//         surname: account.surname,
+//         username: account.user.username,
+//         bio: account.bio,
+//         following: account.numberOfFollowing,
+//         followers: account.numberOfFollowers,
+//       }}
+//     />
+//     <div className="new-post">
+//       <NewPost></NewPost>
+//     </div>
+//     {isMyProfile ? (
+//       <button className="red bold my-profile" onClick={logout}>
+//         <p className="prompt">Logout</p>
+//       </button>
+//     ) : (
+//       <div></div>
+//     )}
+//   </div>
+//   <div className="posts">
+//     {posts.length > 0 ? (
+//       posts.map((post) => {
+//         post["author"] = {
+//           name: account.name,
+//           surname: account.surname,
+//         };
+//         return (
+//           <Post
+//             key={post.id}
+//             post={post}
+//             deleteOption={isMyProfile}
+//             handleDelete={handleDeletePost}
+//           ></Post>
+//         );
+//       })
+//     ) : (
+//       <h1>No posts to show yet!</h1>
+//     )}
+//   </div>
+// </div>
+// const { data } = useQuery(Constants.GET_MY_POSTS, {
+//   onCompleted(data) {
+//     setPosts(data.account.posts);
+//   },
+// });
+
+// useQuery(Constants.GET_MY_ACCOUNT_DETAILS, {
+//   onCompleted(data) {
+//     if (props.isMyProfile) {
+//       saveUserData(data.account);
+//       setAccount(JSON.parse(getUser()));
+//     } else {
+//       setAccount(data.account);
+//     }
+//   },
+// });
+// <div className="profile_container">
+//   <img src={Avatar} alt="avatar"></img>
+//   <div className="other">
+//     <h3>name: {this.state.name}</h3>
+//     <h3>surname: {this.state.surname}</h3>
+//     <h3>username: {this.state.username}</h3>
+//   </div>
+//   <div className="clear bio">
+//     <p className="prompt">About me:</p>
+//     <p>{this.state.bio}</p>
+//   </div>
+//   <div className="account_list">
+//     <button className="orange bold" onClick={this.props.getFollowing}>
+//       <p className="prompt">Following: {this.state.following}</p>
+//     </button>
+//     <button className="red bold" onClick={this.props.getFollowers}>
+//       <p className="prompt">Followers: {this.state.followers}</p>
+//     </button>
+//   </div>
+// </div>
