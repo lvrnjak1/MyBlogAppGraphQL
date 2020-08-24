@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
   },
   gridList: {
-    height: 450,
+    //height: 450,
   },
   icon: {
     color: "rgba(255, 255, 255, 0.54)",
@@ -80,22 +80,23 @@ export default function Profile(props) {
         ""
       ) : (
         <div>
-          <Header
-            {...props}
-            dashboard={false}
-            isMyProfile={props.isMyProfile} //based on this we will have the follow unfollow button
-          ></Header>
+          <Header {...props} dashboard={false}></Header>
           <div className="background">
             <Container maxWidth="lg">
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={8}>
-                  <NewPost callback={handleNewPost}></NewPost>
-                </Grid>
+                {props.location.state.isMyProfile ? (
+                  <Grid item xs={12} sm={8}>
+                    <NewPost callback={handleNewPost}></NewPost>
+                  </Grid>
+                ) : (
+                  ""
+                )}
                 <Grid item xs={12} sm={4}>
                   <Grid container spacing={4}>
                     <Grid item xs={12}>
                       <ProfileSnippet
                         account={{
+                          id: account.id,
                           name: account.name,
                           surname: account.surname,
                           username: account.user.username,
@@ -103,7 +104,10 @@ export default function Profile(props) {
                           bio: account.bio,
                           following: account.numberOfFollowing,
                           followers: account.numberOfFollowers,
+                          isFollowedByLoggedInAccount:
+                            account.isFollowedByLoggedInAccount,
                         }}
+                        isMyProfile={props.location.state.isMyProfile}
                       ></ProfileSnippet>
                     </Grid>
                     <Grid item xs={12}>
