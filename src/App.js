@@ -58,7 +58,7 @@ class App extends React.Component {
               ></Route>
               <Route
                 path="/register"
-                render={(props) => <Register></Register>}
+                render={(props) => <Register {...props}></Register>}
               ></Route>
               <Route
                 path="/dashboard"

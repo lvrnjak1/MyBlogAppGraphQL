@@ -6,7 +6,7 @@ import Post from "./Post.js";
 import NewPost from "./NewPost";
 import * as Constants from "../constants/Constants.js";
 import { useQuery } from "react-apollo";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./Header.js";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";

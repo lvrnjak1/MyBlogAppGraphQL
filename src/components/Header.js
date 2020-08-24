@@ -42,7 +42,7 @@ export default function Header(props) {
 
   const logout = () => {
     localStorage.clear();
-    props.history.push("/");
+    props.history.replace("/");
   };
 
   const goToMyProfile = () => {
