@@ -38,7 +38,6 @@ export default function ProfileSnippet(props) {
 
   const handleFollow = async (e, id) => {
     e.preventDefault();
-    console.log(id);
     await toggleFollow({
       variables: { followeeId: id },
     });

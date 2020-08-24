@@ -147,7 +147,7 @@ export default function Post(props) {
               >
                 {author.name + " " + author.surname}
               </Link>
-              {edited ? "(edited)" : ""}
+              {edited ? " (edited)" : ""}
             </Typography>
             {!editing ? (
               <Typography variant="subtitle1" paragraph>

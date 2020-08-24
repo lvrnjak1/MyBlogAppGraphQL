@@ -20,10 +20,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-around",
     overflow: "hidden",
   },
-  gridList: {
-    width: 500,
-    height: 450,
-  },
   icon: {
     color: "rgba(255, 255, 255, 0.54)",
   },
@@ -53,13 +49,15 @@ export default function Dashboard(props) {
             </Grid>
             <Grid item xs={3}>
               <Search
-                refreshPosts={() => {
-                  refetch();
-                }}
+                refreshPosts={() =>
+                  refetch().then((res) => {
+                    setFeedPosts(res.data.posts);
+                  })
+                }
               ></Search>
             </Grid>
             <Grid item xs={9}>
-              <GridList cellhight="auto" cols={1} classname={classes.gridList}>
+              <GridList cellhight="auto" cols={1}>
                 {feedPosts.map((post) => (
                   <GridListTile key={post.id}>
                     <Post post={post} deleteOption={false}></Post>
