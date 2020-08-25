@@ -24,35 +24,32 @@ export default function Dashboard(props) {
   return (
     <div>
       <Header {...props} dashboard={true}></Header>
-      <Container maxWidth="lg">
-        <Grid container spacing={5}>
-          <Grid item xs={8}>
-            <NewPost></NewPost>
-            <br></br>
-            <GridList cellhight="auto" cols={1}>
-              {feedPosts.map((post) => (
-                <GridListTile key={post.id}>
-                  <Post
-                    post={post}
-                    deleteOption={false}
-                    // openLikesList={openModal}
-                    // open={setModalOpened}
-                  ></Post>
-                </GridListTile>
-              ))}
-            </GridList>
+      <div className="background">
+        <Container maxWidth="lg">
+          <Grid container spacing={5}>
+            <Grid item xs={8}>
+              <NewPost></NewPost>
+              <br></br>
+              <GridList cellhight="auto" cols={1}>
+                {feedPosts.map((post) => (
+                  <GridListTile key={post.id}>
+                    <Post post={post} deleteOption={false}></Post>
+                  </GridListTile>
+                ))}
+              </GridList>
+            </Grid>
+            <Grid item xs={4}>
+              <Search
+                refreshPosts={() =>
+                  refetch().then((res) => {
+                    setFeedPosts(res.data.posts);
+                  })
+                }
+              ></Search>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <Search
-              refreshPosts={() =>
-                refetch().then((res) => {
-                  setFeedPosts(res.data.posts);
-                })
-              }
-            ></Search>
-          </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </div>
     </div>
   );
 }
