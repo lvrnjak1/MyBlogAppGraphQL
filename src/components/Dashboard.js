@@ -17,6 +17,7 @@ export default function Dashboard(props) {
   const [feedPosts, setFeedPosts] = useState([]);
   const [modalOpened, setModalOpened] = useState(false);
   const [modalId, setModalId] = useState(null);
+  const [modalList, setModalList] = useState([]);
 
   const { refetch } = useQuery(Constants.POPULATE_FEED, {
     onCompleted(data) {
@@ -24,8 +25,9 @@ export default function Dashboard(props) {
     },
   });
 
-  const openModal = (postId) => {
+  const openModal = (postId, list) => {
     setModalId(postId);
+    setModalList(list);
     setModalOpened(true);
   };
 
@@ -37,6 +39,7 @@ export default function Dashboard(props) {
           modalOpened={modalOpened}
           setModalOpened={setModalOpened}
           modalId={modalId}
+          list={modalList}
         ></LikeList>
       ) : (
         ""
@@ -53,6 +56,7 @@ export default function Dashboard(props) {
                     post={post}
                     deleteOption={false}
                     openLikesList={openModal}
+                    open={setModalOpened}
                   ></Post>
                 </GridListTile>
               ))}

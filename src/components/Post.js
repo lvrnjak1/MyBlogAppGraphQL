@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Constants from "../constants/Constants.js";
-import { useMutation } from "react-apollo";
+import { useMutation, useLazyQuery, withApollo } from "react-apollo";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -25,7 +25,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Post(props) {
+function Post(props) {
   const [likeButtonText, setLikeButtonText] = useState(
     props.post.likedByTheCurrentUser ? "Dislike" : "Like"
   );
@@ -39,6 +39,10 @@ export default function Post(props) {
   const [editing, setEditing] = useState(false);
   const [titleEdited, setTItleEdited] = useState(title);
   const [bodyEdited, setBodyEdited] = useState(body);
+
+  useEffect(() => {
+    setLikePlural(likes !== 1);
+  }, [likes]);
 
   const classes = useStyles();
   const [author] = useState({
@@ -63,7 +67,7 @@ export default function Post(props) {
   const [toggleLike] = useMutation(Constants.TOGGLE_LIKE, {
     onCompleted(data) {
       setLikes(data.post.numberOfLikes);
-      setLikePlural(likes !== 1);
+      //setLikePlural(likes !== 1);
       setLikeButtonText(likeButtonText === "Like" ? "Dislike" : "Like");
     },
   });
@@ -82,6 +86,24 @@ export default function Post(props) {
     setTitle(newTitle);
     setBody(newBody);
     setEdited(newEdited);
+  };
+
+  const handleOpenLikes = async () => {
+    //delete the cache for the query so it forces refetch
+    Object.keys(props.client.cache.data.data).forEach(
+      (key) =>
+        key.match(/^\$ROOT_QUERY.getPostById/) &&
+        props.client.cache.data.delete(key)
+    );
+    const result = await props.client.query({
+      query: Constants.GET_POST_LIKES,
+      variables: { postId: id },
+    });
+    setLikes(result.data.post.likes.length);
+    props.openLikesList(
+      id,
+      result.data.post.likes.map((like) => like.account)
+    );
   };
 
   return (
@@ -176,7 +198,7 @@ export default function Post(props) {
                 >
                   {likeButtonText}
                 </Button>
-                <Button onClick={() => props.openLikesList(id)}>
+                <Button onClick={handleOpenLikes}>
                   Liked by {likes} user{like_plural ? "s" : ""}
                 </Button>
               </div>
@@ -199,3 +221,5 @@ export default function Post(props) {
     </Grid>
   );
 }
+
+export default withApollo(Post);
