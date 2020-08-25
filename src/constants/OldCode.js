@@ -332,3 +332,201 @@
 //     )}
 //   </div>
 // </div>
+
+// <div>
+//   {!account.user || loading || error ? (
+//     ""
+//   ) : (
+//     <div>
+//       <Header {...props} dashboard={false}></Header>
+//       <div className="background">
+//         <Container maxWidth="lg">
+//           <Grid container spacing={4}>
+//             {props.location.state.isMyProfile ? (
+//               <Grid item xs={12} sm={8}>
+//                 <NewPost callback={handleNewPost}></NewPost>
+//               </Grid>
+//             ) : (
+//               ""
+//             )}
+//             <Grid item xs={12} sm={4}>
+//               <Grid container spacing={4}>
+//                 <Grid item xs={12}>
+//                   <ProfileSnippet
+//                     account={{
+//                       id: account.id,
+//                       name: account.name,
+//                       surname: account.surname,
+//                       username: account.user.username,
+//                       email: account.user.email,
+//                       bio: account.bio,
+//                       following: account.numberOfFollowing,
+//                       followers: account.numberOfFollowers,
+//                       isFollowedByLoggedInAccount:
+//                         account.isFollowedByLoggedInAccount,
+//                     }}
+//                     isMyProfile={props.location.state.isMyProfile}
+//                   ></ProfileSnippet>
+//                 </Grid>
+//                 <Grid item xs={12}>
+//                   <AccountList
+//                     list={account.followers}
+//                     title="Followers"
+//                   ></AccountList>
+//                 </Grid>
+//                 <Grid item xs={12}>
+//                   <AccountList
+//                     list={account.following}
+//                     title="Following"
+//                   ></AccountList>
+//                 </Grid>
+//               </Grid>
+//             </Grid>
+//             <Grid item xs={8}>
+//               <GridList
+//                 cellHeight="auto"
+//                 cols={1}
+//                 className={classes.gridList}
+//               >
+//                 {account.posts.length > 0 ? (
+//                   account.posts.map((post) => {
+//                     post["author"] = {
+//                       name: account.name,
+//                       surname: account.surname,
+//                       user: {
+//                         username: account.user.username,
+//                       },
+//                     };
+//                     return (
+//                       <GridListTile key={post.id}>
+//                         <Post
+//                           post={post}
+//                           deleteOption={props.location.state.isMyProfile}
+//                           handleDelete={handleDeletePost}
+//                           handleEdit={handleEditPost}
+//                         ></Post>
+//                       </GridListTile>
+//                     );
+//                   })
+//                 ) : (
+//                   <h1>No posts to show yet!</h1>
+//                 )}
+//               </GridList>
+//             </Grid>
+//           </Grid>
+//         </Container>
+//       </div>
+//     </div>
+//   )}
+// </div>
+
+//cellHeight={200}
+
+// export default class Dashboard extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     const account = JSON.parse(getUser());
+//     this.state = {
+//       loggedIn: getToken() != null,
+//       id: account.id,
+//       name: account.name,
+//       surname: account.surname,
+//       email: account.user.email,
+//       bio: account.bio,
+//       username: account.user.username,
+//       numberOfFollowers: account.numberOfFollowers,
+//       numberOfFollowing: account.numberOfFollowing,
+//     };
+//   }
+
+//   logout = () => {
+//     localStorage.clear();
+//     this.props.history.push("/");
+//   };
+
+//   goToMyProfile = () => {
+//     this.props.history.push("/profile/" + this.state.username, {
+//       isMyProfile: true,
+//     });
+//   };
+
+//   render() {
+//     return this.state.loggedIn ? (
+//       <div>
+//         <div className="profile">
+//           <button
+//             className="orange bold my-profile"
+//             onClick={this.goToMyProfile}
+//           >
+//             <p className="prompt">Go to my profile</p>
+//           </button>
+//           <ProfileSnippet
+//             account={{
+//               name: this.state.name,
+//               surname: this.state.surname,
+//               username: this.state.username,
+//               bio: this.state.bio,
+//               following: this.state.numberOfFollowing,
+//               followers: this.state.numberOfFollowers,
+//             }}
+//           />
+//           <div className="new-post">
+//             <NewPost></NewPost>
+//           </div>
+//           <button className="red bold my-profile" onClick={this.logout}>
+//             <p className="prompt">Logout</p>
+//           </button>
+//         </div>
+//         <div className="posts">
+//           <Query query={Constants.POPULATE_FEED}>
+//             {({ loading, error, data }) => {
+//               if (loading) return "Loading...";
+//               if (error) return `Error! ${error.message}`;
+//               const { posts } = data;
+//               return posts.length > 0 ? (
+//                 posts.map((post) => (
+//                   <Post key={post.id} post={post} deleteOption={false}></Post>
+//                 ))
+//               ) : (
+//                 <h1>No posts to show yet!</h1>
+//               );
+//             }}
+//           </Query>
+//         </div>
+//       </div>
+//     ) : (
+//       <div>Ups, log in</div>
+//     );
+//   }
+// }
+
+// <div>
+//   <Header {...props} dashboard={true}></Header>
+//   <div className="background">
+//     <Container maxWidth="lg" className={classes.background}>
+//       <Grid container spacing={4}>
+//         <Grid item xs={9}>
+//           <NewPost></NewPost>
+//         </Grid>
+//         <Grid item xs={3}>
+//           <Search
+//             refreshPosts={() =>
+//               refetch().then((res) => {
+//                 setFeedPosts(res.data.posts);
+//               })
+//             }
+//           ></Search>
+//         </Grid>
+//         <Grid item xs={9}>
+//           <GridList cellhight="auto" cols={1}>
+//             {feedPosts.map((post) => (
+//               <GridListTile key={post.id}>
+//                 <Post post={post} deleteOption={false}></Post>
+//               </GridListTile>
+//             ))}
+//           </GridList>
+//         </Grid>
+//       </Grid>
+//     </Container>
+//   </div>
+// </div>

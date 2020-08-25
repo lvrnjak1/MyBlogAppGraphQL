@@ -23,14 +23,6 @@ const useStyles = makeStyles((theme) => ({
   toolbarTitle: {
     flex: 1,
   },
-  toolbarSecondary: {
-    justifyContent: "space-between",
-    overflowX: "auto",
-  },
-  toolbarLink: {
-    padding: theme.spacing(1),
-    flexShrink: 0,
-  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -46,22 +38,23 @@ export default function Header(props) {
   };
 
   const goToMyProfile = () => {
-    //if (!props.dashboard) return;
     props.history.push("/profile/" + account.user.username, {
       isMyProfile: true,
       id: account.id,
     });
+    window.location.reload();
   };
 
   const goToDashboard = () => {
     props.history.push("/dashboard");
+    window.location.reload();
   };
 
   return (
     <div>
       <Toolbar className={classes.toolbar}>
         <Button size="small" color="primary" onClick={goToMyProfile}>
-          {account.name} {account.surname}
+          WELLCOME {account.name} {account.surname}
         </Button>
         <Typography
           component="h2"
@@ -73,13 +66,9 @@ export default function Header(props) {
         >
           {props.dashboard ? "BLOG: DASHBOARD" : "BLOG"}
         </Typography>
-        {props.dashboard ? (
-          ""
-        ) : (
-          <IconButton onClick={goToDashboard}>
-            <HomeIcon color="primary" fontSize="large" />
-          </IconButton>
-        )}
+        <IconButton onClick={goToDashboard}>
+          <HomeIcon color="primary" fontSize="large" />
+        </IconButton>
         <Button
           variant="contained"
           size="small"

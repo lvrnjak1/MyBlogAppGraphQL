@@ -205,23 +205,44 @@ export const GET_ACCOUNT_BY_ID = gql`
         likedByTheCurrentUser
         edited
       }
+      followers {
+        id
+        name
+        surname
+        user {
+          username
+        }
+      }
+      following {
+        id
+        name
+        surname
+        user {
+          username
+        }
+      }
     }
   }
 `;
 
-// followers {
-//   id
-//   name
-//   surname
-//   user{
-//     username
-//   }
-// }
-// following {
-//   id
-//   name
-//   surname
-//   user{
-//     username
-//   }
-// }
+export const SUBSCRIBE = gql`
+  subscription {
+    newPost {
+      id
+      title
+      body
+      dateTimePosted
+      edited
+      author {
+        id
+        name
+        surname
+        user {
+          username
+        }
+      }
+      numberOfLikes
+      likedByTheCurrentUser
+    }
+  }
+`;

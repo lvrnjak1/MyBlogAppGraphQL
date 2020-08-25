@@ -7,10 +7,11 @@ import { useQuery, useMutation } from "react-apollo";
 import Header from "./Header.js";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
-import { Paper } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
+import AccountList from "./AccountList";
+import "../css/style.css";
 
 //create your forceUpdate hook
 function useForceUpdate() {
@@ -88,6 +89,7 @@ export default function Profile(props) {
     newPosts.unshift(post);
     setAccount({ ...account, posts: newPosts });
     forceUpdate();
+    //window.location.reload();
   };
 
   const { loading, error } = useQuery(Constants.GET_ACCOUNT_BY_ID, {
@@ -101,49 +103,21 @@ export default function Profile(props) {
 
   return (
     <div>
-      {!account.user || loading || error ? (
-        ""
-      ) : (
+      {!account.user || loading || error ? null : (
         <div>
           <Header {...props} dashboard={false}></Header>
           <div className="background">
             <Container maxWidth="lg">
-              <Grid container spacing={4}>
-                {props.location.state.isMyProfile ? (
-                  <Grid item xs={12} sm={8}>
-                    <NewPost callback={handleNewPost}></NewPost>
-                  </Grid>
-                ) : (
-                  ""
-                )}
-                <Grid item xs={12} sm={4}>
-                  <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                      <ProfileSnippet
-                        account={{
-                          id: account.id,
-                          name: account.name,
-                          surname: account.surname,
-                          username: account.user.username,
-                          email: account.user.email,
-                          bio: account.bio,
-                          following: account.numberOfFollowing,
-                          followers: account.numberOfFollowers,
-                          isFollowedByLoggedInAccount:
-                            account.isFollowedByLoggedInAccount,
-                        }}
-                        isMyProfile={props.location.state.isMyProfile}
-                      ></ProfileSnippet>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Paper>Followers</Paper>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Paper>Following</Paper>
-                    </Grid>
-                  </Grid>
-                </Grid>
+              <Grid container spacing={5}>
                 <Grid item xs={8}>
+                  {props.location.state.isMyProfile ? (
+                    <div>
+                      <NewPost callback={handleNewPost}></NewPost>
+                      <br></br>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   <GridList
                     cellHeight="auto"
                     cols={1}
@@ -173,6 +147,35 @@ export default function Profile(props) {
                       <h1>No posts to show yet!</h1>
                     )}
                   </GridList>
+                </Grid>
+                <Grid item xs={4}>
+                  <ProfileSnippet
+                    account={{
+                      id: account.id,
+                      name: account.name,
+                      surname: account.surname,
+                      username: account.user.username,
+                      email: account.user.email,
+                      bio: account.bio,
+                      following: account.numberOfFollowing,
+                      followers: account.numberOfFollowers,
+                      isFollowedByLoggedInAccount:
+                        account.isFollowedByLoggedInAccount,
+                    }}
+                    isMyProfile={props.location.state.isMyProfile}
+                  ></ProfileSnippet>
+                  <br></br>
+                  <AccountList
+                    list={account.followers}
+                    title="Followers"
+                    count={account.numberOfFollowers}
+                  ></AccountList>
+                  <br></br>
+                  <AccountList
+                    list={account.following}
+                    title="Following"
+                    count={account.numberOfFollowing}
+                  ></AccountList>
                 </Grid>
               </Grid>
             </Container>

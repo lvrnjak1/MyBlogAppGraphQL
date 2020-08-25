@@ -61,6 +61,7 @@ export default function SignIn(props) {
     props.history.push("/dashboard", {
       loggedIn: true,
     });
+    window.location.reload();
   };
 
   const showError = () => {

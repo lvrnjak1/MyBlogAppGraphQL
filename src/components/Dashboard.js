@@ -1,38 +1,21 @@
 import React from "react";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
-import { makeStyles } from "@material-ui/core/styles";
 import Post from "./Post.js";
 import NewPost from "./NewPost";
 import * as Constants from "../constants/Constants.js";
 import { useQuery } from "react-apollo";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "./Header.js";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
-import "../css/dashboard.css";
+import "../css/style.css";
 import Search from "./Search.js";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-  },
-  icon: {
-    color: "rgba(255, 255, 255, 0.54)",
-  },
-  padding: {
-    padding: "1em",
-  },
-}));
-
 export default function Dashboard(props) {
-  const classes = useStyles();
   const [feedPosts, setFeedPosts] = useState([]);
 
-  const { loading, error, data, refetch } = useQuery(Constants.POPULATE_FEED, {
+  const { refetch } = useQuery(Constants.POPULATE_FEED, {
     onCompleted(data) {
       setFeedPosts(data.posts);
     },
@@ -42,21 +25,11 @@ export default function Dashboard(props) {
     <div>
       <Header {...props} dashboard={true}></Header>
       <div className="background">
-        <Container maxWidth="lg" className={classes.background}>
-          <Grid container spacing={4}>
-            <Grid item xs={9}>
+        <Container maxWidth="lg">
+          <Grid container spacing={5}>
+            <Grid item xs={8}>
               <NewPost></NewPost>
-            </Grid>
-            <Grid item xs={3}>
-              <Search
-                refreshPosts={() =>
-                  refetch().then((res) => {
-                    setFeedPosts(res.data.posts);
-                  })
-                }
-              ></Search>
-            </Grid>
-            <Grid item xs={9}>
+              <br></br>
               <GridList cellhight="auto" cols={1}>
                 {feedPosts.map((post) => (
                   <GridListTile key={post.id}>
@@ -65,88 +38,18 @@ export default function Dashboard(props) {
                 ))}
               </GridList>
             </Grid>
+            <Grid item xs={4}>
+              <Search
+                refreshPosts={() =>
+                  refetch().then((res) => {
+                    setFeedPosts(res.data.posts);
+                  })
+                }
+              ></Search>
+            </Grid>
           </Grid>
         </Container>
       </div>
     </div>
   );
 }
-//cellHeight={200}
-
-// export default class Dashboard extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     const account = JSON.parse(getUser());
-//     this.state = {
-//       loggedIn: getToken() != null,
-//       id: account.id,
-//       name: account.name,
-//       surname: account.surname,
-//       email: account.user.email,
-//       bio: account.bio,
-//       username: account.user.username,
-//       numberOfFollowers: account.numberOfFollowers,
-//       numberOfFollowing: account.numberOfFollowing,
-//     };
-//   }
-
-//   logout = () => {
-//     localStorage.clear();
-//     this.props.history.push("/");
-//   };
-
-//   goToMyProfile = () => {
-//     this.props.history.push("/profile/" + this.state.username, {
-//       isMyProfile: true,
-//     });
-//   };
-
-//   render() {
-//     return this.state.loggedIn ? (
-//       <div>
-//         <div className="profile">
-//           <button
-//             className="orange bold my-profile"
-//             onClick={this.goToMyProfile}
-//           >
-//             <p className="prompt">Go to my profile</p>
-//           </button>
-//           <ProfileSnippet
-//             account={{
-//               name: this.state.name,
-//               surname: this.state.surname,
-//               username: this.state.username,
-//               bio: this.state.bio,
-//               following: this.state.numberOfFollowing,
-//               followers: this.state.numberOfFollowers,
-//             }}
-//           />
-//           <div className="new-post">
-//             <NewPost></NewPost>
-//           </div>
-//           <button className="red bold my-profile" onClick={this.logout}>
-//             <p className="prompt">Logout</p>
-//           </button>
-//         </div>
-//         <div className="posts">
-//           <Query query={Constants.POPULATE_FEED}>
-//             {({ loading, error, data }) => {
-//               if (loading) return "Loading...";
-//               if (error) return `Error! ${error.message}`;
-//               const { posts } = data;
-//               return posts.length > 0 ? (
-//                 posts.map((post) => (
-//                   <Post key={post.id} post={post} deleteOption={false}></Post>
-//                 ))
-//               ) : (
-//                 <h1>No posts to show yet!</h1>
-//               );
-//             }}
-//           </Query>
-//         </div>
-//       </div>
-//     ) : (
-//       <div>Ups, log in</div>
-//     );
-//   }
-// }
