@@ -176,7 +176,7 @@ export default function Post(props) {
                 >
                   {likeButtonText}
                 </Button>
-                <Button>
+                <Button onClick={() => props.openLikesList(id)}>
                   Liked by {likes} user{like_plural ? "s" : ""}
                 </Button>
               </div>

@@ -2,10 +2,9 @@
 export const saveUserToken = (token) => {
   localStorage.setItem("token", token);
 };
+
 // Remove user and token from local storage
 export const logoutUser = () => {
-  //   localStorage.removeItem("token");
-  //   localStorage.removeItem("userData");
   localStorage.clear();
 };
 
@@ -13,6 +12,7 @@ export const logoutUser = () => {
 export const saveUserData = (user) => {
   localStorage.setItem("userData", JSON.stringify(user));
 };
+
 // Returns token - without Bearer prefix
 export const getToken = () => {
   return localStorage.getItem("token") || null;
@@ -20,4 +20,15 @@ export const getToken = () => {
 
 export const getUser = () => {
   return localStorage.getItem("userData");
+};
+
+export const getModalStyle = () => {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
 };
