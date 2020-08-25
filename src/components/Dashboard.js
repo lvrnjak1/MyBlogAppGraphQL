@@ -11,28 +11,12 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import "../css/style.css";
 import Search from "./Search.js";
-import Modal from "@material-ui/core/Modal";
-import { makeStyles } from "@material-ui/core/styles";
-import { getModalStyle } from "./Utils";
-import AccountList from "./AccountList.js";
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    position: "absolute",
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: "1px solid",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-}));
+import LikeList from "./LikeList.js";
 
 export default function Dashboard(props) {
   const [feedPosts, setFeedPosts] = useState([]);
   const [modalOpened, setModalOpened] = useState(false);
-  const classes = useStyles();
-  const [modalStyle] = React.useState(getModalStyle);
-  const [modalList, setModalList] = useState([]);
+  const [modalId, setModalId] = useState(null);
 
   const { refetch } = useQuery(Constants.POPULATE_FEED, {
     onCompleted(data) {
@@ -40,63 +24,51 @@ export default function Dashboard(props) {
     },
   });
 
-  const body = (
-    <div style={modalStyle} className={classes.paper}>
-      <AccountList list={modalList} count={modalList.length} title="Liked by" />
-    </div>
-  );
-
-  //use lazy Query to get the list
   const openModal = (postId) => {
-    //modalList = feedPosts.find((post) => post.id === postId).likes;
-    setModalList([]);
+    setModalId(postId);
     setModalOpened(true);
   };
 
   return (
     <div>
       <Header {...props} dashboard={true}></Header>
-      <div className="background">
-        <Modal
-          open={modalOpened}
-          onClose={() => {
-            setModalList([]);
-            setModalOpened(false);
-          }}
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-        >
-          {body}
-        </Modal>
-        <Container maxWidth="lg">
-          <Grid container spacing={5}>
-            <Grid item xs={8}>
-              <NewPost></NewPost>
-              <br></br>
-              <GridList cellhight="auto" cols={1}>
-                {feedPosts.map((post) => (
-                  <GridListTile key={post.id}>
-                    <Post
-                      post={post}
-                      deleteOption={false}
-                      openLikesList={openModal}
-                    ></Post>
-                  </GridListTile>
-                ))}
-              </GridList>
-            </Grid>
-            <Grid item xs={4}>
-              <Search
-                refreshPosts={() =>
-                  refetch().then((res) => {
-                    setFeedPosts(res.data.posts);
-                  })
-                }
-              ></Search>
-            </Grid>
+      {modalOpened ? (
+        <LikeList
+          modalOpened={modalOpened}
+          setModalOpened={setModalOpened}
+          modalId={modalId}
+        ></LikeList>
+      ) : (
+        ""
+      )}
+      <Container maxWidth="lg">
+        <Grid container spacing={5}>
+          <Grid item xs={8}>
+            <NewPost></NewPost>
+            <br></br>
+            <GridList cellhight="auto" cols={1}>
+              {feedPosts.map((post) => (
+                <GridListTile key={post.id}>
+                  <Post
+                    post={post}
+                    deleteOption={false}
+                    openLikesList={openModal}
+                  ></Post>
+                </GridListTile>
+              ))}
+            </GridList>
           </Grid>
-        </Container>
-      </div>
+          <Grid item xs={4}>
+            <Search
+              refreshPosts={() =>
+                refetch().then((res) => {
+                  setFeedPosts(res.data.posts);
+                })
+              }
+            ></Search>
+          </Grid>
+        </Grid>
+      </Container>
     </div>
   );
 }

@@ -246,3 +246,20 @@ export const SUBSCRIBE = gql`
     }
   }
 `;
+
+export const GET_POST_LIKES = gql`
+  query getPostById($postId: ID!) {
+    post: getPostById(postId: $postId) {
+      likes {
+        account {
+          id
+          name
+          surname
+          user {
+            username
+          }
+        }
+      }
+    }
+  }
+`;

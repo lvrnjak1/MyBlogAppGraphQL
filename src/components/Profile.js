@@ -12,6 +12,7 @@ import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import AccountList from "./AccountList";
 import "../css/style.css";
+import LikeList from "./LikeList.js";
 
 //create your forceUpdate hook
 function useForceUpdate() {
@@ -43,6 +44,13 @@ export default function Profile(props) {
   const classes = useStyles();
   const [deletePost] = useMutation(Constants.DELETE_POST);
   const [editPost] = useMutation(Constants.EDIT_POST);
+  const [modalOpened, setModalOpened] = useState(false);
+  const [modalId, setModalId] = useState(null);
+
+  const openModal = (postId) => {
+    setModalId(postId);
+    setModalOpened(true);
+  };
 
   const handleDeletePost = async (e, id) => {
     e.preventDefault();
@@ -55,7 +63,6 @@ export default function Profile(props) {
           posts: account.posts.filter((post) => post.id !== id),
         });
       }
-      //err =>
     });
   };
 
@@ -89,7 +96,6 @@ export default function Profile(props) {
     newPosts.unshift(post);
     setAccount({ ...account, posts: newPosts });
     forceUpdate();
-    //window.location.reload();
   };
 
   const { loading, error } = useQuery(Constants.GET_ACCOUNT_BY_ID, {
@@ -106,6 +112,15 @@ export default function Profile(props) {
       {!account.user || loading || error ? null : (
         <div>
           <Header {...props} dashboard={false}></Header>
+          {modalOpened ? (
+            <LikeList
+              modalOpened={modalOpened}
+              setModalOpened={setModalOpened}
+              modalId={modalId}
+            ></LikeList>
+          ) : (
+            ""
+          )}
           <div className="background">
             <Container maxWidth="lg">
               <Grid container spacing={5}>
@@ -139,6 +154,7 @@ export default function Profile(props) {
                               deleteOption={props.location.state.isMyProfile}
                               handleDelete={handleDeletePost}
                               handleEdit={handleEditPost}
+                              openLikesList={openModal}
                             ></Post>
                           </GridListTile>
                         );
