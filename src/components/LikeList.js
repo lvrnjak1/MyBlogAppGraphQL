@@ -1,7 +1,4 @@
 import React from "react";
-import * as Constants from "../constants/Constants.js";
-import { useQuery, useLazyQuery } from "react-apollo";
-import { useState, useEffect } from "react";
 import Modal from "@material-ui/core/Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import { getModalStyle } from "./Utils";

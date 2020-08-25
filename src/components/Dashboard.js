@@ -11,13 +11,9 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import "../css/style.css";
 import Search from "./Search.js";
-import LikeList from "./LikeList.js";
 
 export default function Dashboard(props) {
   const [feedPosts, setFeedPosts] = useState([]);
-  const [modalOpened, setModalOpened] = useState(false);
-  const [modalId, setModalId] = useState(null);
-  const [modalList, setModalList] = useState([]);
 
   const { refetch } = useQuery(Constants.POPULATE_FEED, {
     onCompleted(data) {
@@ -25,25 +21,9 @@ export default function Dashboard(props) {
     },
   });
 
-  const openModal = (postId, list) => {
-    setModalId(postId);
-    setModalList(list);
-    setModalOpened(true);
-  };
-
   return (
     <div>
       <Header {...props} dashboard={true}></Header>
-      {modalOpened ? (
-        <LikeList
-          modalOpened={modalOpened}
-          setModalOpened={setModalOpened}
-          modalId={modalId}
-          list={modalList}
-        ></LikeList>
-      ) : (
-        ""
-      )}
       <Container maxWidth="lg">
         <Grid container spacing={5}>
           <Grid item xs={8}>
@@ -55,8 +35,8 @@ export default function Dashboard(props) {
                   <Post
                     post={post}
                     deleteOption={false}
-                    openLikesList={openModal}
-                    open={setModalOpened}
+                    // openLikesList={openModal}
+                    // open={setModalOpened}
                   ></Post>
                 </GridListTile>
               ))}

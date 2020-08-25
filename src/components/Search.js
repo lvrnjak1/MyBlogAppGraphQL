@@ -77,7 +77,7 @@ function Search(props) {
               autoFocus
               onChange={(e) => {
                 setQuery(e.target.value);
-                if (e.target.value != "") {
+                if (e.target.value !== "") {
                   searchAccounts(e);
                 } else {
                   setSearchResults([]);

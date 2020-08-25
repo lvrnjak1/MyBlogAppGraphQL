@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as Constants from "../constants/Constants.js";
-import { useMutation, useLazyQuery, withApollo } from "react-apollo";
+import { useMutation, withApollo } from "react-apollo";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -12,6 +12,7 @@ import "../css/style.css";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import TextField from "@material-ui/core/TextField";
+import LikeList from "./LikeList.js";
 
 const useStyles = makeStyles({
   card: {
@@ -39,6 +40,10 @@ function Post(props) {
   const [editing, setEditing] = useState(false);
   const [titleEdited, setTItleEdited] = useState(title);
   const [bodyEdited, setBodyEdited] = useState(body);
+
+  const [modalOpened, setModalOpened] = useState(false);
+  const [modalId, setModalId] = useState(null);
+  const [modalList, setModalList] = useState([]);
 
   useEffect(() => {
     setLikePlural(likes !== 1);
@@ -100,125 +105,143 @@ function Post(props) {
       variables: { postId: id },
     });
     setLikes(result.data.post.likes.length);
-    props.openLikesList(
+    openModal(
       id,
       result.data.post.likes.map((like) => like.account)
     );
   };
 
+  const openModal = (postId, list) => {
+    setModalId(postId);
+    setModalList(list);
+    setModalOpened(true);
+  };
+
   return (
-    <Grid item xs={12}>
-      <Card className={classes.card} variant="outlined">
-        <div className={classes.cardDetails}>
-          <CardContent>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
+    <div>
+      {modalOpened ? (
+        <LikeList
+          modalOpened={modalOpened}
+          setModalOpened={setModalOpened}
+          modalId={modalId}
+          list={modalList}
+        ></LikeList>
+      ) : (
+        ""
+      )}
+      <Grid item xs={12}>
+        <Card className={classes.card} variant="outlined">
+          <div className={classes.cardDetails}>
+            <CardContent>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {!editing ? (
+                  <Typography component="h2" variant="h5">
+                    {title}
+                  </Typography>
+                ) : (
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label="title"
+                    name="title"
+                    autoFocus
+                    value={titleEdited}
+                    onChange={(e) => {
+                      setTItleEdited(e.target.value);
+                    }}
+                  />
+                )}
+
+                {props.deleteOption ? (
+                  <div>
+                    <IconButton
+                      onClick={(e) => props.handleDelete(e, id)}
+                      style={{ float: "right" }}
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => setEditing(!editing)}
+                      style={{ float: "right" }}
+                    >
+                      <EditOutlinedIcon />
+                    </IconButton>{" "}
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+              <Typography variant="subtitle1" color="textSecondary">
+                {stringFromDate(dateTime)} by{" "}
+                <Link
+                  to={{
+                    pathname: `/profile/${author.username}`,
+                    state: { isMyProfile: false, id: author.id },
+                  }}
+                  className="link"
+                >
+                  {author.name + " " + author.surname}
+                </Link>
+                {edited ? " (edited)" : ""}
+              </Typography>
               {!editing ? (
-                <Typography component="h2" variant="h5">
-                  {title}
+                <Typography variant="subtitle1" paragraph>
+                  {body}
                 </Typography>
               ) : (
                 <TextField
                   variant="outlined"
                   margin="normal"
                   fullWidth
-                  label="title"
-                  name="title"
+                  label="body"
+                  name="body"
                   autoFocus
-                  value={titleEdited}
+                  value={bodyEdited}
                   onChange={(e) => {
-                    setTItleEdited(e.target.value);
+                    setBodyEdited(e.target.value);
                   }}
                 />
               )}
 
-              {props.deleteOption ? (
+              {!editing ? (
                 <div>
-                  <IconButton
-                    onClick={(e) => props.handleDelete(e, id)}
-                    style={{ float: "right" }}
+                  <Button
+                    variant="contained"
+                    size="small"
+                    className={classes.submit}
+                    color="primary"
+                    onClick={handleLike}
                   >
-                    <DeleteOutlineIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => setEditing(!editing)}
-                    style={{ float: "right" }}
-                  >
-                    <EditOutlinedIcon />
-                  </IconButton>{" "}
+                    {likeButtonText}
+                  </Button>
+                  <Button onClick={handleOpenLikes}>
+                    Liked by {likes} user{like_plural ? "s" : ""}
+                  </Button>
                 </div>
               ) : (
-                ""
+                <div>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    className={classes.submit}
+                    color="primary"
+                    onClick={handleEdit}
+                  >
+                    Done
+                  </Button>
+                </div>
               )}
-            </div>
-            <Typography variant="subtitle1" color="textSecondary">
-              {stringFromDate(dateTime)} by{" "}
-              <Link
-                to={{
-                  pathname: `/profile/${author.username}`,
-                  state: { isMyProfile: false, id: author.id },
-                }}
-                className="link"
-              >
-                {author.name + " " + author.surname}
-              </Link>
-              {edited ? " (edited)" : ""}
-            </Typography>
-            {!editing ? (
-              <Typography variant="subtitle1" paragraph>
-                {body}
-              </Typography>
-            ) : (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                label="body"
-                name="body"
-                autoFocus
-                value={bodyEdited}
-                onChange={(e) => {
-                  setBodyEdited(e.target.value);
-                }}
-              />
-            )}
-
-            {!editing ? (
-              <div>
-                <Button
-                  variant="contained"
-                  size="small"
-                  className={classes.submit}
-                  color="primary"
-                  onClick={handleLike}
-                >
-                  {likeButtonText}
-                </Button>
-                <Button onClick={handleOpenLikes}>
-                  Liked by {likes} user{like_plural ? "s" : ""}
-                </Button>
-              </div>
-            ) : (
-              <div>
-                <Button
-                  variant="contained"
-                  size="small"
-                  className={classes.submit}
-                  color="primary"
-                  onClick={handleEdit}
-                >
-                  Done
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </div>
-      </Card>
-    </Grid>
+            </CardContent>
+          </div>
+        </Card>
+      </Grid>
+    </div>
   );
 }
 
