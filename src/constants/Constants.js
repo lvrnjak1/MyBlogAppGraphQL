@@ -1,6 +1,7 @@
 import { gql } from "apollo-boost";
 
-export const GRAPHQL_API = "http://localhost:8080/graphql";
+export const GRAPHQL_API = process.env.REACT_APP_GRAPHQL_API; //"http://localhost:8080/graphql";
+export const SUBSCRIPTION_URL = process.env.REACT_APP_SUBSCRIPTION_URL; //"ws://localhost:8080/subscriptions";
 
 export const LOGIN_MUTATION = gql`
   mutation signIn($authData: AuthData) {
@@ -182,7 +183,7 @@ export const SEARCH = gql`
   }
 `;
 
-export const GET_ACCOUNT_BY_USERNAME= gql`
+export const GET_ACCOUNT_BY_USERNAME = gql`
   query getAccountByUsername($username: String!) {
     account: getAccountByUsername(username: $username) {
       id

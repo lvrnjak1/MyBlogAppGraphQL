@@ -30,7 +30,7 @@ let authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:8080/subscriptions`,
+  uri: Constants.SUBSCRIPTION_URL,
   options: {
     reconnect: true,
     connectionParams: {
