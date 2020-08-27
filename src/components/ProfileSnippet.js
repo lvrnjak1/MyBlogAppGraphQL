@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Card from "@material-ui/core/Card";
 import { makeStyles } from "@material-ui/core/styles";
-import { CardContent, IconButton } from "@material-ui/core";
+import { CardContent, IconButton, Grid } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import * as Constants from "../constants/Constants.js";
 import { useMutation } from "react-apollo";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles({
   card: {
@@ -27,12 +28,9 @@ export default function ProfileSnippet(props) {
   const classes = useStyles();
 
   const [toggleFollow] = useMutation(Constants.TOGGLE_FOLLOW, {
-    // onCompleted(data) {
-    //   // setAccount({
-    //   //   ...props.account,
-    //   //   isFollowedByLoggedInAccount: !account.isFollowedByLoggedInAccount,
-    //   // });
-    // },
+    onCompleted(data) {
+      props.toggleIsFollowed();
+    },
   });
 
   const handleFollow = async (e, id) => {
@@ -53,21 +51,34 @@ export default function ProfileSnippet(props) {
                 alignItems: "center",
               }}
             >
-              <Typography component="h2" variant="h5">
-                {props.account.name} {props.account.surname} (
-                {props.account.username})
-              </Typography>
-              {!props.isMyProfile ? (
-                <IconButton onClick={(e) => handleFollow(e, props.account.id)}>
-                  {props.account.isFollowedByLoggedInAccount ? (
-                    <RemoveCircleOutlineIcon color="primary"></RemoveCircleOutlineIcon>
-                  ) : (
-                    <AddCircleOutlineOutlinedIcon color="primary"></AddCircleOutlineOutlinedIcon>
-                  )}
-                </IconButton>
-              ) : (
-                ""
-              )}
+              <Grid container justify="space-between" spacing={1}>
+                <Grid item>
+                  <Typography component="h2" variant="h5">
+                    {props.account.name} {props.account.surname} (
+                    {props.account.username})
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <div>
+                    {!props.isMyProfile ? (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={(e) => handleFollow(e, props.account.id)}
+                        className={classes.submit}
+                        color="primary"
+                        disableElevation
+                      >
+                        {props.account.isFollowedByLoggedInAccount
+                          ? "UNFOLLOW"
+                          : "FOLLOW"}
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </Grid>
+              </Grid>
             </div>
             <Typography variant="subtitle1" color="textSecondary">
               {props.account.email}

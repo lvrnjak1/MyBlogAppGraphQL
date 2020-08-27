@@ -101,8 +101,16 @@ export default function Profile(props) {
     },
     onCompleted(data) {
       setAccount(data.account);
+      forceUpdate();
     },
   });
+
+  const toggleIsFollowed = () => {
+    setAccount({
+      ...account,
+      isFollowedByLoggedInAccount: !account.isFollowedByLoggedInAccount,
+    });
+  };
 
   return (
     <div>
@@ -161,18 +169,19 @@ export default function Profile(props) {
                 <Grid item xs={4}>
                   <ProfileSnippet
                     account={{
-                      id: data.account.id,
-                      name: data.account.name,
-                      surname: data.account.surname,
-                      username: data.account.user.username,
-                      email: data.account.user.email,
-                      bio: data.account.bio,
-                      following: data.account.numberOfFollowing,
-                      followers: data.account.numberOfFollowers,
+                      id: account.id,
+                      name: account.name,
+                      surname: account.surname,
+                      username: account.user.username,
+                      email: account.user.email,
+                      bio: account.bio,
+                      following: account.numberOfFollowing,
+                      followers: account.numberOfFollowers,
                       isFollowedByLoggedInAccount:
-                        data.account.isFollowedByLoggedInAccount,
+                        account.isFollowedByLoggedInAccount,
                     }}
                     isMyProfile={props.location.state.isMyProfile}
+                    toggleIsFollowed={toggleIsFollowed}
                   ></ProfileSnippet>
                   <br></br>
                   <AccountList
