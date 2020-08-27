@@ -12,6 +12,7 @@ import Container from "@material-ui/core/Container";
 import AccountList from "./AccountList";
 import "../css/style.css";
 import LikeList from "./LikeList.js";
+import { getUser } from "./Utils";
 
 //create your forceUpdate hook
 function useForceUpdate() {
@@ -26,6 +27,7 @@ export default function Profile(props) {
   const [editPost] = useMutation(Constants.EDIT_POST);
   const [modalOpened, setModalOpened] = useState(false);
   const [modalId, setModalId] = useState(null);
+  const currentUser = JSON.parse(getUser());
 
   const openModal = (postId) => {
     setModalId(postId);
@@ -78,13 +80,18 @@ export default function Profile(props) {
     forceUpdate();
   };
 
-  const { loading, error, data } = useQuery(Constants.GET_ACCOUNT_BY_ID, {
+  const { loading, error, data } = useQuery(Constants.GET_ACCOUNT_BY_USERNAME, {
     variables: {
-      accountId: props.location.state.id,
+      //accountId: props.location.state.id,
+      username: props.match.params.username,
     },
     onCompleted(data) {
       setAccount(data.account);
       forceUpdate();
+    },
+    onError(error) {
+      //hmm
+      props.history.push("/dashboard");
     },
   });
 
@@ -113,7 +120,7 @@ export default function Profile(props) {
             <Container maxWidth="lg">
               <Grid container spacing={5}>
                 <Grid item xs={8}>
-                  {props.location.state.isMyProfile ? (
+                  {props.match.params.username === currentUser.user.username ? (
                     <div>
                       <NewPost callback={handleNewPost}></NewPost>
                       <br></br>
@@ -136,7 +143,11 @@ export default function Profile(props) {
                           <GridListTile key={post.id}>
                             <Post
                               post={post}
-                              deleteOption={props.location.state.isMyProfile}
+                              deleteOption={
+                                props.match.params.username ===
+                                currentUser.user.username
+                              }
+                              // deleteOption={props.location.state.isMyProfile}
                               handleDelete={handleDeletePost}
                               handleEdit={handleEditPost}
                               openLikesList={openModal}
@@ -163,7 +174,10 @@ export default function Profile(props) {
                       isFollowedByLoggedInAccount:
                         account.isFollowedByLoggedInAccount,
                     }}
-                    isMyProfile={props.location.state.isMyProfile}
+                    // isMyProfile={props.location.state.isMyProfile}
+                    isMyProfile={
+                      props.match.params.username === currentUser.user.username
+                    }
                     toggleIsFollowed={toggleIsFollowed}
                   ></ProfileSnippet>
                   <br></br>

@@ -53,6 +53,7 @@ export default function SignUp(props) {
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const isValid = () => {
     let valid = true;
@@ -110,6 +111,7 @@ export default function SignUp(props) {
     setEmailErrorMessage("");
     setNameErrorMessage("");
     setSurnameErrorMessage("");
+    setErrorMessage("");
   };
 
   const update = (cache, data) => {
@@ -118,6 +120,14 @@ export default function SignUp(props) {
     auth.login();
     props.history.push("/dashboard");
     //window.location.reload();
+  };
+
+  const handleError = (error) => {
+    let message = String(error).replace(
+      "Error: GraphQL error: Exception while fetching data (/account) : ",
+      ""
+    );
+    setErrorMessage(message);
   };
 
   return (
@@ -130,7 +140,11 @@ export default function SignUp(props) {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <Mutation mutation={Constants.REGISTER_MUTATION} update={update}>
+        <Mutation
+          mutation={Constants.REGISTER_MUTATION}
+          update={update}
+          onError={handleError}
+        >
           {(register) => (
             <form
               onSubmit={(e) => {
@@ -242,6 +256,9 @@ export default function SignUp(props) {
               >
                 Register
               </Button>
+              <Typography component="label" className={classes.error}>
+                {errorMessage}
+              </Typography>
               <Grid container justify="flex-end">
                 <Grid item>
                   <RouterLink to="/login">

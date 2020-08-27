@@ -182,9 +182,9 @@ export const SEARCH = gql`
   }
 `;
 
-export const GET_ACCOUNT_BY_ID = gql`
-  query getAccountById($accountId: ID!) {
-    account: getAccountById(accountId: $accountId) {
+export const GET_ACCOUNT_BY_USERNAME= gql`
+  query getAccountByUsername($username: String!) {
+    account: getAccountByUsername(username: $username) {
       id
       name
       surname
