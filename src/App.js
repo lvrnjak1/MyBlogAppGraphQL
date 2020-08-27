@@ -12,6 +12,9 @@ import { ApolloLink } from "apollo-link";
 import { ApolloClient } from "apollo-client";
 import Profile from "./components/Profile";
 import "fontsource-roboto";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { split } from "@apollo/client";
 
 const httpLink = new HttpLink({ uri: Constants.GRAPHQL_API });
 
@@ -22,25 +25,37 @@ let authMiddleware = new ApolloLink((operation, forward) => {
       Authorization: token ? `Bearer ${token}` : "",
     },
   });
-
   return forward(operation);
 });
 
+const wsLink = new WebSocketLink({
+  uri: `ws://localhost:8080/subscriptions`,
+  options: {
+    reconnect: true,
+    connectionParams: {
+      authToken: localStorage.getItem("token"),
+    },
+  },
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  httpLink
+);
+
 let client = new ApolloClient({
-  link: concat(authMiddleware, httpLink),
+  link: concat(authMiddleware, splitLink),
   cache: new InMemoryCache(),
 });
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoginActive: true,
-      account: {},
-      token: "",
-    };
-  }
-
   render() {
     return (
       <ApolloProvider client={client}>
@@ -62,9 +77,7 @@ class App extends React.Component {
               ></Route>
               <Route
                 path="/dashboard"
-                render={(props) => (
-                  <Dashboard {...props} account={this.state.account} />
-                )}
+                render={(props) => <Dashboard {...props} />}
               ></Route>
               <Route
                 path="/profile/:username"
