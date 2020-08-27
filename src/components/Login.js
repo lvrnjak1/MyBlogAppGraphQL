@@ -15,6 +15,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Copyright from "./Copyright";
+import auth from "./Auth";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -58,10 +59,8 @@ export default function SignIn(props) {
   const update = (cache, data) => {
     saveUserData(data.data.signIn.account);
     saveUserToken(data.data.signIn.token);
-    props.history.push("/dashboard", {
-      loggedIn: true,
-    });
-    window.location.reload();
+    auth.login();
+    props.history.push("/dashboard");
   };
 
   const showError = () => {

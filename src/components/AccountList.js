@@ -17,7 +17,6 @@ const useStyles = makeStyles({
 });
 
 export default function AccountList(props) {
-  const [list] = useState(props.list);
   const currentUser = JSON.parse(getUser());
   const classes = useStyles();
   return (
@@ -27,7 +26,7 @@ export default function AccountList(props) {
       </Typography>
       <Card variant="outlined" className={classes.tile}>
         <GridList cellHeight={50} cols={1} className={classes.gridList}>
-          {list.map((follower) => (
+          {props.list.map((follower) => (
             <GridListTile key={follower.id} className={classes.tile}>
               <Link
                 to={{

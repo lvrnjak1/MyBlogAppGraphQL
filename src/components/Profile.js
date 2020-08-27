@@ -27,9 +27,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-around",
     overflow: "hidden",
   },
-  gridList: {
-    //height: 450,
-  },
   icon: {
     color: "rgba(255, 255, 255, 0.54)",
   },
@@ -98,7 +95,7 @@ export default function Profile(props) {
     forceUpdate();
   };
 
-  const { loading, error } = useQuery(Constants.GET_ACCOUNT_BY_ID, {
+  const { loading, error, data } = useQuery(Constants.GET_ACCOUNT_BY_ID, {
     variables: {
       accountId: props.location.state.id,
     },
@@ -133,14 +130,11 @@ export default function Profile(props) {
                   ) : (
                     ""
                   )}
-                  <GridList
-                    cellHeight="auto"
-                    cols={1}
-                    className={classes.gridList}
-                  >
+                  <GridList cellHeight="auto" cols={1}>
                     {account.posts.length > 0 ? (
                       account.posts.map((post) => {
                         post["author"] = {
+                          id: account.id,
                           name: account.name,
                           surname: account.surname,
                           user: {
@@ -167,30 +161,30 @@ export default function Profile(props) {
                 <Grid item xs={4}>
                   <ProfileSnippet
                     account={{
-                      id: account.id,
-                      name: account.name,
-                      surname: account.surname,
-                      username: account.user.username,
-                      email: account.user.email,
-                      bio: account.bio,
-                      following: account.numberOfFollowing,
-                      followers: account.numberOfFollowers,
+                      id: data.account.id,
+                      name: data.account.name,
+                      surname: data.account.surname,
+                      username: data.account.user.username,
+                      email: data.account.user.email,
+                      bio: data.account.bio,
+                      following: data.account.numberOfFollowing,
+                      followers: data.account.numberOfFollowers,
                       isFollowedByLoggedInAccount:
-                        account.isFollowedByLoggedInAccount,
+                        data.account.isFollowedByLoggedInAccount,
                     }}
                     isMyProfile={props.location.state.isMyProfile}
                   ></ProfileSnippet>
                   <br></br>
                   <AccountList
-                    list={account.followers}
+                    list={data.account.followers}
                     title="Followers"
-                    count={account.numberOfFollowers}
+                    count={data.account.numberOfFollowers}
                   ></AccountList>
                   <br></br>
                   <AccountList
-                    list={account.following}
+                    list={data.account.following}
                     title="Following"
-                    count={account.numberOfFollowing}
+                    count={data.account.numberOfFollowing}
                   ></AccountList>
                 </Grid>
               </Grid>

@@ -25,15 +25,14 @@ const useStyles = makeStyles({
 
 export default function ProfileSnippet(props) {
   const classes = useStyles();
-  const [account, setAccount] = useState(props.account);
 
   const [toggleFollow] = useMutation(Constants.TOGGLE_FOLLOW, {
-    onCompleted(data) {
-      setAccount({
-        ...account,
-        isFollowedByLoggedInAccount: !account.isFollowedByLoggedInAccount,
-      });
-    },
+    // onCompleted(data) {
+    //   // setAccount({
+    //   //   ...props.account,
+    //   //   isFollowedByLoggedInAccount: !account.isFollowedByLoggedInAccount,
+    //   // });
+    // },
   });
 
   const handleFollow = async (e, id) => {
@@ -55,11 +54,12 @@ export default function ProfileSnippet(props) {
               }}
             >
               <Typography component="h2" variant="h5">
-                {account.name} {account.surname} ({account.username})
+                {props.account.name} {props.account.surname} (
+                {props.account.username})
               </Typography>
               {!props.isMyProfile ? (
-                <IconButton onClick={(e) => handleFollow(e, account.id)}>
-                  {account.isFollowedByLoggedInAccount ? (
+                <IconButton onClick={(e) => handleFollow(e, props.account.id)}>
+                  {props.account.isFollowedByLoggedInAccount ? (
                     <RemoveCircleOutlineIcon color="primary"></RemoveCircleOutlineIcon>
                   ) : (
                     <AddCircleOutlineOutlinedIcon color="primary"></AddCircleOutlineOutlinedIcon>
@@ -70,9 +70,9 @@ export default function ProfileSnippet(props) {
               )}
             </div>
             <Typography variant="subtitle1" color="textSecondary">
-              {account.email}
+              {props.account.email}
             </Typography>
-            <Typography component="label">{account.bio} </Typography>
+            <Typography component="label">{props.account.bio} </Typography>
           </CardContent>
         </div>
       </Card>

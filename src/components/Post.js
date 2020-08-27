@@ -72,7 +72,6 @@ function Post(props) {
   const [toggleLike] = useMutation(Constants.TOGGLE_LIKE, {
     onCompleted(data) {
       setLikes(data.post.numberOfLikes);
-      //setLikePlural(likes !== 1);
       setLikeButtonText(likeButtonText === "Like" ? "Dislike" : "Like");
     },
   });
@@ -182,7 +181,7 @@ function Post(props) {
                 <Link
                   to={{
                     pathname: `/profile/${author.username}`,
-                    state: { isMyProfile: false, id: author.id },
+                    state: { isMyProfile: props.deleteOption, id: author.id },
                   }}
                   className="link"
                 >

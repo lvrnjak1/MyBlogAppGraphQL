@@ -13,6 +13,7 @@ import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOut
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { Link } from "react-router-dom";
 import "../css/style.css";
+import { getUser } from "./Utils.js";
 
 const useStyles = makeStyles({
   card: {
@@ -30,6 +31,7 @@ function useForceUpdate() {
 function Search(props) {
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const currenUser = JSON.parse(getUser());
   const classes = useStyles();
   const forceUpdate = useForceUpdate();
 
@@ -87,31 +89,44 @@ function Search(props) {
           </Grid>
           <Grid item xs={12}>
             <GridList cellHeight={50} cols={1}>
-              {searchResults.map((account) => (
-                <GridListTile key={account.id}>
-                  <IconButton onClick={(e) => handleFollow(e, account.id)}>
-                    {account.isFollowedByLoggedInAccount ? (
-                      <RemoveCircleOutlineIcon color="primary"></RemoveCircleOutlineIcon>
-                    ) : (
-                      <AddCircleOutlineOutlinedIcon color="primary"></AddCircleOutlineOutlinedIcon>
-                    )}
-                  </IconButton>
-                  <Link
-                    to={{
-                      pathname: `/profile/${account.user.username}`,
-                      state: { isMyProfile: false, id: account.id },
-                    }}
-                    className="link"
-                  >
-                    <Typography component="label">
-                      {account.name} {account.surname}{" "}
-                    </Typography>
-                    <Typography component="label" color="textSecondary">
-                      {account.user.username}
-                    </Typography>
-                  </Link>
-                </GridListTile>
-              ))}
+              {searchResults.map((account) => {
+                const isMyProfile =
+                  account.user.username === currenUser.user.username;
+                return (
+                  <GridListTile key={account.id}>
+                    <IconButton onClick={(e) => handleFollow(e, account.id)}>
+                      {isMyProfile ? (
+                        <div></div>
+                      ) : (
+                        <div>
+                          {account.isFollowedByLoggedInAccount ? (
+                            <RemoveCircleOutlineIcon color="primary"></RemoveCircleOutlineIcon>
+                          ) : (
+                            <AddCircleOutlineOutlinedIcon color="primary"></AddCircleOutlineOutlinedIcon>
+                          )}
+                        </div>
+                      )}
+                    </IconButton>
+                    <Link
+                      to={{
+                        pathname: `/profile/${account.user.username}`,
+                        state: {
+                          isMyProfile: isMyProfile,
+                          id: account.id,
+                        },
+                      }}
+                      className="link"
+                    >
+                      <Typography component="label">
+                        {account.name} {account.surname}{" "}
+                      </Typography>
+                      <Typography component="label" color="textSecondary">
+                        {account.user.username}
+                      </Typography>
+                    </Link>
+                  </GridListTile>
+                );
+              })}
             </GridList>
           </Grid>
         </Grid>

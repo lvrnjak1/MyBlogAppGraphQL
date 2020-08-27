@@ -6,6 +6,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { getUser } from "./Utils";
 import SvgIcon from "@material-ui/core/SvgIcon";
+import { withApollo } from "react-apollo";
+import auth from "./Auth";
 
 function HomeIcon(props) {
   return (
@@ -28,12 +30,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header(props) {
+function Header(props) {
   const classes = useStyles();
   const account = JSON.parse(getUser());
 
   const logout = () => {
     localStorage.clear();
+    auth.logout();
     props.history.replace("/");
   };
 
@@ -42,12 +45,10 @@ export default function Header(props) {
       isMyProfile: true,
       id: account.id,
     });
-    window.location.reload();
   };
 
   const goToDashboard = () => {
     props.history.push("/dashboard");
-    window.location.reload();
   };
 
   return (
@@ -83,3 +84,5 @@ export default function Header(props) {
     </div>
   );
 }
+
+export default withApollo(Header);

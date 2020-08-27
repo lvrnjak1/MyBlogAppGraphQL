@@ -18,8 +18,8 @@ function Dashboard(props) {
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const newFeedItem = subscriptionData.data.newPost;
-        console.log(prev);
-        console.log(newFeedItem);
+        // console.log(prev);
+        // console.log(newFeedItem);
         const exists = prev.posts.find((post) => post.id === newFeedItem.id);
         if (exists) return prev;
         return Object.assign({}, prev, {
@@ -31,7 +31,11 @@ function Dashboard(props) {
 
   return (
     <div>
-      <Header {...props} dashboard={true}></Header>
+      <Header
+        {...props}
+        dashboard={true}
+        setLoggedIn={props.setLoggedIn}
+      ></Header>
       <div className="background">
         <Container maxWidth="lg">
           <Grid container spacing={5}>

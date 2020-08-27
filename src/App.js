@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
+import Login from "./components/Login.js";
+import Register from "./components/Register.js";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import Dashboard from "./components/Dashboard.js";
 import { concat, InMemoryCache } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import * as Constants from "./constants/Constants.js";
@@ -15,6 +20,7 @@ import "fontsource-roboto";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { split } from "@apollo/client";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const httpLink = new HttpLink({ uri: Constants.GRAPHQL_API });
 
@@ -53,42 +59,47 @@ const splitLink = split(
 let client = new ApolloClient({
   link: concat(authMiddleware, splitLink),
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "no-cache",
+    },
+    query: {
+      fetchPolicy: "no-cache",
+    },
+  },
 });
 
-class App extends React.Component {
-  render() {
-    return (
-      <ApolloProvider client={client}>
-        <Router>
-          <div>
-            <Switch>
-              <Route
-                path="/"
-                exact
-                render={(props) => <Login {...props}></Login>}
-              ></Route>
-              <Route
-                path="/login"
-                render={(props) => <Login {...props}></Login>}
-              ></Route>
-              <Route
-                path="/register"
-                render={(props) => <Register {...props}></Register>}
-              ></Route>
-              <Route
-                path="/dashboard"
-                render={(props) => <Dashboard {...props} />}
-              ></Route>
-              <Route
-                path="/profile/:username"
-                render={(props) => <Profile {...props} />}
-              ></Route>
-            </Switch>
-          </div>
-        </Router>
-      </ApolloProvider>
-    );
-  }
+function App() {
+  return (
+    <ApolloProvider client={client}>
+      <Router>
+        <div>
+          <Switch>
+            <Route
+              path="/"
+              exact
+              render={(props) => <Login {...props}></Login>}
+            />
+            <Route
+              path="/login"
+              render={(props) => <Login {...props}></Login>}
+            />
+            <Route
+              path="/register"
+              render={(props) => <Register {...props}></Register>}
+            />
+            <ProtectedRoute path="/dashboard" exact component={Dashboard} />
+            <ProtectedRoute
+              path="/profile/:username"
+              exact
+              component={Profile}
+            />
+            <Route path="*" component={() => "404 NOT FOUND"} />
+          </Switch>
+        </div>
+      </Router>
+    </ApolloProvider>
+  );
 }
 
 export default App;
