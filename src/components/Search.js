@@ -51,7 +51,6 @@ function Search(props) {
         data.account.isFollowedByLoggedInAccount;
       setSearchResults(results);
       forceUpdate();
-      props.refreshPosts();
     },
   });
 
