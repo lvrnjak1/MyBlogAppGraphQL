@@ -1,7 +1,7 @@
 import { gql } from "apollo-boost";
 
-export const GRAPHQL_API = process.env.REACT_APP_GRAPHQL_API; //"http://localhost:8080/graphql";
-export const SUBSCRIPTION_URL = process.env.REACT_APP_SUBSCRIPTION_URL; //"ws://localhost:8080/subscriptions";
+export const GRAPHQL_API = process.env.REACT_APP_GRAPHQL_API;
+export const SUBSCRIPTION_URL = process.env.REACT_APP_SUBSCRIPTION_URL;
 
 export const LOGIN_MUTATION = gql`
   mutation signIn($authData: AuthData) {
