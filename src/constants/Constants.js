@@ -1,7 +1,10 @@
 import { gql } from "apollo-boost";
 
-export const GRAPHQL_API = process.env.REACT_APP_GRAPHQL_API;
-export const SUBSCRIPTION_URL = process.env.REACT_APP_SUBSCRIPTION_URL;
+export const GRAPHQL_API = "https://lvrnjak-blog-server.herokuapp.com/graphql";
+//process.env.REACT_APP_GRAPHQL_API;
+export const SUBSCRIPTION_URL =
+  "ws://lvrnjak-blog-server.herokuapp.com/subscriptions";
+//process.env.REACT_APP_SUBSCRIPTION_URL;
 
 export const LOGIN_MUTATION = gql`
   mutation signIn($authData: AuthData) {
