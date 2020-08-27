@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./App.css";
 import Login from "./components/Login.js";
 import Register from "./components/Register.js";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard.js";
 import { concat, InMemoryCache } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";

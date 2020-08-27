@@ -9,7 +9,6 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
-import { makeStyles } from "@material-ui/core/styles";
 import AccountList from "./AccountList";
 import "../css/style.css";
 import LikeList from "./LikeList.js";
@@ -20,25 +19,9 @@ function useForceUpdate() {
   return () => setValue((value) => ++value); // update the state to force render
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-  },
-  icon: {
-    color: "rgba(255, 255, 255, 0.54)",
-  },
-  padding: {
-    padding: "1em",
-  },
-}));
-
 export default function Profile(props) {
-  const [account, setAccount] = useState({}); //useState(JSON.parse(getUser()));
+  const [account, setAccount] = useState({});
   const forceUpdate = useForceUpdate();
-  const classes = useStyles();
   const [deletePost] = useMutation(Constants.DELETE_POST);
   const [editPost] = useMutation(Constants.EDIT_POST);
   const [modalOpened, setModalOpened] = useState(false);
